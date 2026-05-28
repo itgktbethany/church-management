@@ -1,0 +1,189 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { authClient } from "@/lib/auth-client";
+
+export default function LoginPage() {
+  // const supabase = createClient();
+  const router = useRouter();
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+    const [error, setError] = useState("");
+
+  // const handleLogin = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     const { error } =
+  //       await supabase.auth.signInWithPassword({
+  //         email,
+  //         password,
+  //       });
+
+  //     if (error) {
+  //       toast.error(error.message);
+
+  //       return;
+  //     }
+
+  //     toast.success("You are logged in");
+
+  //     router.push("/dashboard");
+  //   } catch (error) {
+  //     toast.error(
+  //       "Something went wrong"
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     const origin = window.location.origin;
+
+  //     await supabase.auth.signInWithOAuth({
+  //       provider: "google",
+  //       options:{
+  //           redirectTo: `${origin}/auth/callback`
+  //       }
+  //     });
+  //   } catch (error) {
+  //     toast.error(
+  //       "Google login failed !"
+  //     );
+
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleLogin = async()=>{
+      try {
+    setLoading(true);
+    setError("");
+
+    const { error: loginError } =
+      await authClient.signIn.email({
+        email,
+        password,
+      });
+
+    if (loginError) {
+      setError(
+        loginError.message ?? "Login failed"
+      );
+      return;
+    }
+
+    toast.success("Welcome back");
+
+    router.push("/dashboard");
+
+  } catch {
+    setError("Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+  }
+
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
+      <Card className="w-full max-w-md rounded-2xl shadow-sm">
+        <CardContent className="space-y-6 p-8">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome Back
+            </h1>
+
+            <p className="text-sm text-muted-foreground">
+              Login to continue
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Email</Label>
+
+            <Input
+              type="email"
+              placeholder="john@example.com"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              disabled={loading}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Password</Label>
+
+            <Input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              disabled={loading}
+            />
+          </div>
+
+          <Button
+            className="w-full"
+            onClick={handleLogin}
+            disabled={loading}
+          >
+            {loading
+              ? "Logging in..."
+              : "Login"}
+          </Button>
+
+          <div className="relative">
+            <Separator />
+
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+              OR
+            </span>
+          </div>
+
+          <Button
+            variant="outline"
+            className="w-full"
+            disabled={loading}
+          >
+            Continue with Google
+          </Button>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/signup"
+              className="font-medium text-foreground hover:underline"
+            >
+              Sign Up
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
+    </main>
+  );
+}

@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1779287874619,
+      "tag": "0000_heavy_vapor",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779349756536,
+      "tag": "0001_flat_william_stryker",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779718117386,
+      "tag": "0002_moaning_brood",
+      "breakpoints": true
+    }
+  ]
+}
