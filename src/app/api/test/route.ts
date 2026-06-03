@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { user } from "@/lib/db/schema";
 
 export async function GET() {
-  const data = await db.select().from(users);
+  const data = await db.select().from(user);
 
   return Response.json(data);
 }
