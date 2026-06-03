@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import { Textarea } from "@/components/ui/textarea";
 
-import { createClient } from "@/lib/supabase/client";
+// import { createClient } from "@/lib/supabase/client";
 
 interface CompleteDevotionalButtonProps {
   devotionalId: string;
@@ -24,48 +24,48 @@ export default function CompleteDevotionalButton({
   const [completed, setCompleted] =
     useState(false);
 
-  const handleComplete =
-    async () => {
-      try {
-        setLoading(true);
+  // const handleComplete =
+  //   async () => {
+  //     try {
+  //       setLoading(true);
 
-        const supabase =
-          createClient();
+  //       const supabase =
+  //         createClient();
 
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+  //       const {
+  //         data: { user },
+  //       } = await supabase.auth.getUser();
 
-        if (!user) return;
+  //       if (!user) return;
 
-        const { error } =
-          await supabase
-            .from(
-              "devotional_comments"
-            )
-            .insert({
-              devotional_id:
-                devotionalId,
+  //       const { error } =
+  //         await supabase
+  //           .from(
+  //             "devotional_comments"
+  //           )
+  //           .insert({
+  //             devotional_id:
+  //               devotionalId,
 
-              user_id: user.id,
+  //             user_id: user.id,
 
-              comment: reflection,
+  //             comment: reflection,
 
-              is_completed: true,
-            });
+  //             is_completed: true,
+  //           });
 
-        if (error) {
-          console.error(error);
-          return;
-        }
+  //       if (error) {
+  //         console.error(error);
+  //         return;
+  //       }
 
-        setCompleted(true);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       setCompleted(true);
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
   if (completed) {
     return (
@@ -100,7 +100,7 @@ export default function CompleteDevotionalButton({
       />
 
       <Button
-        onClick={handleComplete}
+        // onClick={handleComplete}
         disabled={loading}
         className="w-full"
       >

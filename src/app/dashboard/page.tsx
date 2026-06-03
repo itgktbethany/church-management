@@ -76,7 +76,7 @@ type Devotional = {
   title: string;
   verse: string;
   content: string;
-  publish_date: string;
+  publishDate: string;
 };
 
 export default function DashboardPage() {

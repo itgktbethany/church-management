@@ -31,7 +31,7 @@ type DevotionalRow = {
   verse: string;
   bible_reading: string;
   content: string;
-  publish_date: string;
+  publishDate: string;
   valid?: boolean;
 };
 
@@ -88,7 +88,7 @@ function validateRows(
       !!row.title &&
       !!row.verse &&
       !!row.content &&
-      !!row.publish_date,
+      !!row.publishDate,
   }));
 }
 

@@ -14,7 +14,7 @@ type DevotionalHistoryCardProps = {
     title: string;
     verse: string;
     content: string;
-    publish_date: string;
+    publishDate: string;
   };
 };
 
@@ -53,7 +53,7 @@ export function DevotionalHistoryCard({
 
               <span>
                 {new Date(
-                  devotional.publish_date
+                  devotional.publishDate
                 ).toLocaleDateString()}
               </span>
             </div>
