@@ -21,7 +21,7 @@ type DevotionalTabsProps = {
     title: string;
     verse: string;
     content: string;
-    publishDate: string;
+    publishDate: string | null;
   }[];
 
   reflections: {
