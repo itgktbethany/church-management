@@ -8,10 +8,8 @@ type DevotionalNoteCardProps = {
   reflection: {
     id: string;
     comment: string;
-    createdAt: string;
-    devotionals: {
-      title: string;
-    }[];
+    createdAt: Date;
+    devotionalTitle:string|null;
   };
 };
 
@@ -28,7 +26,7 @@ export function DevotionalNoteCard({
 
           <div className="space-y-1">
             <h3 className="font-medium leading-none">
-              {reflection.devotionals?.[0]?.title}
+              {reflection.devotionalTitle}
             </h3>
 
             <p className="text-xs text-muted-foreground">

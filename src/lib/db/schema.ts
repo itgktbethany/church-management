@@ -2,7 +2,7 @@ import {
   pgTable,
   text,
   timestamp,
-  boolean,date,uuid,
+  boolean,date,uuid,unique,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -100,5 +100,36 @@ export const devotionalComments =
         .notNull(),
     }
   );
+
+  export const devotionalCompletions = pgTable(
+  "devotional_completions",
+  {
+    id: uuid("id")
+      .defaultRandom()
+      .primaryKey(),
+
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
+
+    devotionalId: uuid("devotional_id")
+      .notNull()
+      .references(() => devotionals.id, {
+        onDelete: "cascade",
+      }),
+
+    completedAt: timestamp("completed_at")
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    userDevotionalUnique: unique().on(
+      table.userId,
+      table.devotionalId
+    ),
+  })
+);
 
 export * from "./auth-schema";

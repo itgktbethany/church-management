@@ -27,10 +27,8 @@ type DevotionalTabsProps = {
   reflections: {
     id: string;
     comment: string;
-    createdAt: string;
-    devotionals: {
-      title: string;
-    }[];
+    createdAt: Date;
+    devotionalTitle: string | null;
   }[];
 };
 

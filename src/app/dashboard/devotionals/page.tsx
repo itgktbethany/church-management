@@ -22,24 +22,32 @@ const devotionalData = await db.select()
 .orderBy(desc(devotionals.publishDate))
 
 const reflectionsData =
-    user
-      ? await db
-          .select()
-          .from(
-            devotionalComments
+  user
+    ? await db
+        .select({
+          id: devotionalComments.id,
+          comment: devotionalComments.comment,
+          createdAt: devotionalComments.createdAt,
+          devotionalTitle: devotionals.title,
+        })
+        .from(devotionalComments)
+        .leftJoin(
+          devotionals,
+          eq(
+            devotionalComments.devotionalId,
+            devotionals.id
           )
-          .where(
-            eq(
-              devotionalComments.userId,
-              user.id
-            )
+        )
+        .where(
+          eq(
+            devotionalComments.userId,
+            user.id
           )
-          .orderBy(
-            desc(
-              devotionalComments.createdAt
-            )
-          )
-      : [];
+        )
+        .orderBy(
+          desc(devotionalComments.createdAt)
+        )
+    : [];
 
 
 const latestDevotional = devotionalData[0];
