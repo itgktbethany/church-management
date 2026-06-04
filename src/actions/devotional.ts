@@ -185,7 +185,7 @@ type BulkDevotionalInput = {
   verse: string;
   bible_reading: string;
   content: string;
-  publish_date: string;
+  publishDate: string;
 };
 
 export async function bulkCreateDevotionals(
@@ -212,7 +212,7 @@ export async function bulkCreateDevotionals(
               item.content,
 
             publishDate:
-              item.publish_date,
+              item.publishDate,
           })
         )
 
