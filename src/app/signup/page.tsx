@@ -109,7 +109,7 @@ async function handleSignup() {
     }
 
     toast.success("Account created successfully");
-
+    router.push("/dashboard");
   } catch {
     setError("Something went wrong");
   } finally {
