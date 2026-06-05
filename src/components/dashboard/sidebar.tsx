@@ -8,10 +8,15 @@ import {
   Users,
   User,
   Settings,
+  Shield,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "./logout-button";
+
+type SidebarProps = {
+  role: string;
+};
 
 const menuItems = [
   {
@@ -41,13 +46,22 @@ const menuItems = [
   },
 ];
 
-export function Sidebar() {
+const adminMenuItems = [
+  {
+    title: "Devotional Management",
+    href: "/dashboard/admin/devotionals",
+    icon: Shield,
+  },
+];
+
+export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <aside className="hidden h-screen w-64 border-r bg-background md:flex md:flex-col">
       <div className="border-b p-6">
         <h1 className="text-xl font-bold">FaithFlow</h1>
+
         <p className="text-sm text-muted-foreground">
           Church Management
         </p>
@@ -73,7 +87,34 @@ export function Sidebar() {
           );
         })}
 
-        <div className="mt-auto pt-4 border-t">
+        {role === "admin" && (
+          <>
+            <div className="mt-4 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Admin
+            </div>
+
+            {adminMenuItems.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted",
+                    pathname === item.href &&
+                      "bg-muted font-medium"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.title}
+                </Link>
+              );
+            })}
+          </>
+        )}
+
+        <div className="mt-auto border-t pt-4">
           <LogoutButton />
         </div>
       </nav>

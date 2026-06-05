@@ -2,6 +2,9 @@ import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db";
+import { user } from "@/lib/db/auth-schema";
 
 export default async function DashboardLayout({
   children,
@@ -14,9 +17,14 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  const dbUser = await db.query.user.findFirst({
+  where: eq(user.id, session.user.id),
+  
+});
+console.log(dbUser);
   return (
     <div className="flex h-screen overflow-hidden bg-muted/30">
-      <Sidebar />
+      <Sidebar  role={dbUser?.role ?? "member"}/>
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar />
