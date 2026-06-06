@@ -49,8 +49,20 @@ const reflectionsData =
         )
     : [];
 
+const today = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Jakarta",
+}).format(new Date());
 
-const latestDevotional = devotionalData[0];
+console.log(today);
+
+const devotionalToday = await db
+  .select()
+  .from(devotionals)
+  .where(eq(devotionals.publishDate, today));
+
+  console.log(devotionalToday);
+
+const latestDevotional = devotionalToday[0];
 
   return (
     <div className="space-y-6">

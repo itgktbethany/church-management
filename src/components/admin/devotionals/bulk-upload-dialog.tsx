@@ -38,43 +38,41 @@ type DevotionalRow = {
 
 export function BulkUploadDialog() {
 
+  const [isUploading, setIsUploading] = useState(false);
+
     const router = useRouter();
 
 async function handleSubmit() {
-  const validRows =
-    data.filter(
-      (item) =>
-        item.valid
+  if (isUploading) return;
+
+  setIsUploading(true);
+
+  try {
+    const validRows = data.filter(
+      (item) => item.valid
     );
 
-  if (
-    validRows.length === 0
-  ) {
-    toast.error(
-      "No valid rows"
+    if (validRows.length === 0) {
+      toast.error("No valid rows");
+      return;
+    }
+
+    const result =
+      await bulkCreateDevotionals(validRows);
+
+    if (!result.success) {
+      toast.error(result.message);
+      return;
+    }
+
+    toast.success(
+      `${validRows.length} devotionals uploaded`
     );
 
-    return;
+    router.refresh();
+  } finally {
+    setIsUploading(false);
   }
-
-  const result =
-    await bulkCreateDevotionals(
-      validRows
-    );
-
-  if (!result.success) {
-    toast.error(
-      result.message
-    );
-
-    return;
-  }
-
-  toast.success(
-    `${validRows.length} devotionals uploaded`
-  );
-
-  router.refresh();
 }
 
 
@@ -163,12 +161,30 @@ function validateRows(
         <div className="space-y-4">
 
           <input
-            type="file"
-            accept=".xlsx,.xls"
-            onChange={
-              handleFileUpload
-            }
-          />
+  type="file"
+  accept=".xlsx,.xls"
+  onChange={handleFileUpload}
+  className="
+    w-full
+    rounded-lg
+    border
+    bg-background
+    text-sm
+    text-muted-foreground
+
+    file:mr-4
+    file:border-0
+    file:bg-primary
+    file:px-4
+    file:py-2
+    file:text-sm
+    file:font-medium
+    file:text-primary-foreground
+    file:cursor-pointer
+
+    hover:file:opacity-90
+  "
+/>
 
           <div className="rounded-lg border p-4">
 
@@ -198,8 +214,15 @@ function validateRows(
               </div>
             )
           )}
-            <Button className="w-full" onClick={handleSubmit} >
-                Upload Devotionals
+            <Button className="w-full" onClick={handleSubmit}
+              disabled={
+                        isUploading ||
+                        data.length === 0 ||
+                        data.every((item) => !item.valid)
+                      }
+            >
+              {isUploading ? "Uploading..." : "Upload Devotionals" }
+                
             </Button>
         </div>
 
