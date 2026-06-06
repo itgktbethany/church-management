@@ -53,14 +53,11 @@ const today = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Jakarta",
 }).format(new Date());
 
-console.log(today);
-
 const devotionalToday = await db
   .select()
   .from(devotionals)
   .where(eq(devotionals.publishDate, today));
 
-  console.log(devotionalToday);
 
 const latestDevotional = devotionalToday[0];
 
