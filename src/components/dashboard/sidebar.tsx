@@ -9,6 +9,7 @@ import {
   User,
   Settings,
   Shield,
+  AlarmClock
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -51,6 +52,11 @@ const adminMenuItems = [
     title: "Devotional Management",
     href: "/dashboard/admin/devotionals",
     icon: Shield,
+  },
+    {
+    title: "Alert Management",
+    href: "/dashboard/admin/alerts",
+    icon: AlarmClock,
   },
 ];
 

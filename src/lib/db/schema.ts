@@ -133,3 +133,4 @@ export const devotionalComments =
 );
 
 export * from "./auth-schema";
+export * from "./alert-schema"

@@ -1,5 +1,5 @@
 "use client";
-
+import {cn} from '@/lib/utils'
 import * as React from "react";
 import {
   Controller,
@@ -12,12 +12,13 @@ const Form = FormProvider;
 const FormField = Controller;
 
 function FormItem({
-  children,
+  children,className,
 }: {
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="space-y-2">
+    <div className={cn("space-y-2",className)}>
       {children}
     </div>
   );
