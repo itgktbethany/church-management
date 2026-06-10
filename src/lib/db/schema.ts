@@ -132,5 +132,34 @@ export const devotionalComments =
   })
 );
 
+export const pushTokens = pgTable(
+  "push_tokens",
+  {
+    id: uuid("id")
+      .defaultRandom()
+      .primaryKey(),
+
+    userId: text("user_id")
+      .notNull()
+      .references(()=>user.id,{
+        onDelete: "cascade",
+      }),
+
+    token: text("token")
+      .notNull(),
+
+    createdAt: timestamp("created_at")
+      .defaultNow()
+      .notNull(),
+
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    tokenUnique: unique().on(table.token),
+  })
+);
+
 export * from "./auth-schema";
 export * from "./alert-schema"

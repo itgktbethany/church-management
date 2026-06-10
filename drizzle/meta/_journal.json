@@ -50,6 +50,20 @@
       "when": 1780931819860,
       "tag": "0006_flashy_carnage",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1781017135439,
+      "tag": "0007_blushing_lightspeed",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1781017901279,
+      "tag": "0008_jazzy_king_cobra",
+      "breakpoints": true
     }
   ]
 }

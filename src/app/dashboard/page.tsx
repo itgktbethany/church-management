@@ -17,6 +17,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
+import { NotificationTestButton } from "@/components/dashboard/notification-test-button";
+import { sendTestNotification } from "@/actions/send-test-notification";
 
 const smartButtons = [
   {
@@ -360,6 +362,14 @@ export default function DashboardPage() {
           <Link href={devotionalHref}>
             Continue Today's Devotional
           </Link>
+        </Button>
+      </div>
+      <NotificationTestButton/>
+      <div>
+        <Button onClick={async()=>{
+          await sendTestNotification();
+        }}>
+          send Test Notification
         </Button>
       </div>
     </div>
