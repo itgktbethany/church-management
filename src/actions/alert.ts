@@ -114,7 +114,8 @@ export async function updateAlert(
         message: data.message,
         sendPush: data.sendPush,
         targetType: data.targetType,
-        displayAt : data.displayAt
+        displayAt : data.displayAt,
+        updatedAt: new Date(),
       })
       .where(
         eq(
@@ -125,10 +126,11 @@ export async function updateAlert(
 
     return {
       success: true,
+      message: "Alert updated Successfully"
     };
 
-  } catch {
-
+  } catch (error){
+    console.error(error)
     return {
       success: false,
       message:
