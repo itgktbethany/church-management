@@ -64,6 +64,20 @@
       "when": 1781017901279,
       "tag": "0008_jazzy_king_cobra",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1782140311315,
+      "tag": "0009_dizzy_firebrand",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1782140479317,
+      "tag": "0010_certain_star_brand",
+      "breakpoints": true
     }
   ]
 }

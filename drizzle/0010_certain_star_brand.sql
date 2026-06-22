@@ -1,0 +1,1 @@
+ALTER TABLE "devotional_comments" ADD COLUMN "visibility" text DEFAULT 'private' NOT NULL;

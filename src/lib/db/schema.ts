@@ -93,6 +93,8 @@ export const devotionalComments =
         "comment"
       ).notNull(),
 
+      visibility: text("visibility").default("private").notNull(),
+
       createdAt: timestamp(
         "created_at"
       )
@@ -163,3 +165,4 @@ export const pushTokens = pgTable(
 
 export * from "./auth-schema";
 export * from "./alert-schema"
+export * from "./group-schema"
