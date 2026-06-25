@@ -1,4 +1,5 @@
 import { getGroups } from "@/actions/group";
+import Link from "next/link";
 
 import {
   Card,
@@ -77,7 +78,11 @@ export async function GroupTable() {
                     "
                   >
                     <td className="p-5 font-medium">
+                      <Link
+                      href={`/dashboard/admin/groups/${group.id}`}
+                      className="font-medium text-primary hover:underline">
                       {group.name}
+                      </Link>
                     </td>
 
                     <td className="p-5">
