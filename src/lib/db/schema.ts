@@ -4,33 +4,7 @@ import {
   timestamp,
   boolean,date,uuid,unique,
 } from "drizzle-orm/pg-core";
-
-export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-
-  name: text("name"),
-
-  email: text("email")
-    .notNull()
-    .unique(),
-
-  emailVerified: boolean("email_verified")
-    .default(false)
-    .notNull(),
-
-  image: text("image"),
-
-  role: text("role")
-    .default("member"),
-
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
-
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .notNull(),
-});
+import { user } from "./auth-schema";
 
 export const devotionals = pgTable(
   "devotionals",
@@ -166,3 +140,4 @@ export const pushTokens = pgTable(
 export * from "./auth-schema";
 export * from "./alert-schema"
 export * from "./group-schema"
+export * from "./ministry-schema"

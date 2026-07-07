@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button";
 
 import { MobileSidebar } from "./mobile-sidebar";
 
-export function Topbar() {
+type TopbarProps = {
+  role: string;
+};
+
+export function Topbar({ role }: TopbarProps) {
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 md:px-6">
       <div className="flex items-center gap-3">
-        <MobileSidebar />
+        <MobileSidebar role={role} />
 
         <div>
           <h2 className="text-lg font-semibold">

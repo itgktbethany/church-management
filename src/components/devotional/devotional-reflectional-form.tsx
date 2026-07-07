@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -15,17 +15,41 @@ import { saveReflection } from "@/actions/devotional";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Lock, Users } from "lucide-react";
+
 interface DevotionalReflectionFormProps {
   devotionalId: string;
+  existingReflection?: {
+    comment: string;
+    visibility: string;
+  } | null;
 }
 
 export function DevotionalReflectionForm({
   devotionalId,
+  existingReflection,
 }: DevotionalReflectionFormProps) {
   const router = useRouter();
 
   const [content, setContent] =
-    useState("");
+    useState(existingReflection?.comment || "");
+
+  const [visibility, setVisibility] =
+    useState<"private" | "group">((existingReflection?.visibility as "private" | "group") || "private");
+
+  useEffect(() => {
+    if (existingReflection) {
+      setContent(existingReflection.comment);
+      setVisibility(existingReflection.visibility as "private" | "group");
+    }
+  }, [existingReflection]);
 
   const [loading, setLoading] =
     useState(false);
@@ -45,14 +69,13 @@ export function DevotionalReflectionForm({
 
         await saveReflection(
           devotionalId,
-          content
+          content,
+          visibility
         );
 
         toast.success(
           "Reflection saved successfully"
         );
-
-        setContent("");
 
         router.refresh();
       } catch {
@@ -91,17 +114,44 @@ export function DevotionalReflectionForm({
         }
       />
 
-      <Button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="w-full sm:w-fit"
-      >
-        {loading && (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        )}
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between pt-2">
+        <div className="w-full sm:w-[220px]">
+          <Select 
+            value={visibility} 
+            onValueChange={(val: "private" | "group") => setVisibility(val)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select visibility" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="private">
+                <div className="flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  Private (Only you)
+                </div>
+              </SelectItem>
+              <SelectItem value="group">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Share with Group
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-        Save Reflection
-      </Button>
+        <Button
+          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full sm:w-fit"
+        >
+          {loading && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
+
+          Save Reflection
+        </Button>
+      </div>
     </div>
   );
 }

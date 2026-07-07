@@ -32,7 +32,7 @@ const menuItems = [
   },
   {
     title: "Groups",
-    href: "/dashboard/groups",
+    href: "/dashboard/group",
     icon: Users,
   },
   {
@@ -53,10 +53,20 @@ const adminMenuItems = [
     href: "/dashboard/admin/devotionals",
     icon: Shield,
   },
-    {
+  {
     title: "Alert Management",
     href: "/dashboard/admin/alerts",
     icon: AlarmClock,
+  },
+  {
+    title: "Group Management",
+    href: "/dashboard/admin/groups",
+    icon: Users,
+  },
+  {
+    title: "Ministries Management",
+    href: "/dashboard/admin/ministries",
+    icon: BookOpen,
   },
 ];
 

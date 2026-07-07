@@ -8,9 +8,11 @@ import {
   LayoutDashboard,
   Menu,
   Settings,
-  Users,
   UserCircle2,
   Cross,
+  Shield,
+  AlarmClock,
+  Users,
 } from "lucide-react";
 
 import {
@@ -38,7 +40,7 @@ const menuItems = [
   },
   {
     title: "Groups",
-    href: "/dashboard/groups",
+    href: "/dashboard/group",
     icon: Users,
   },
   {
@@ -53,7 +55,34 @@ const menuItems = [
   },
 ];
 
-export function MobileSidebar() {
+const adminMenuItems = [
+  {
+    title: "Devotional Management",
+    href: "/dashboard/admin/devotionals",
+    icon: Shield,
+  },
+  {
+    title: "Alert Management",
+    href: "/dashboard/admin/alerts",
+    icon: AlarmClock,
+  },
+  {
+    title: "Group Management",
+    href: "/dashboard/admin/groups",
+    icon: Users,
+  },
+  {
+    title: "Ministries Management",
+    href: "/dashboard/admin/ministries",
+    icon: BookOpen,
+  },
+];
+
+type MobileSidebarProps = {
+  role: string;
+};
+
+export function MobileSidebar({ role }: MobileSidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -116,6 +145,35 @@ export function MobileSidebar() {
                 </Link>
               );
             })}
+
+            {role === "admin" && (
+              <>
+                <div className="mt-4 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Admin
+                </div>
+
+                {adminMenuItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = pathname === item.href;
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
+                        isActive
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      )}
+                    >
+                      <Icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
+              </>
+            )}
           </nav>
 
           <div className="border-t p-4 space-y-4">

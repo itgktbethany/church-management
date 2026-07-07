@@ -1,7 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
-import { desc,eq } from "drizzle-orm";
+import { desc, eq, and, sql } from "drizzle-orm";
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -9,6 +9,7 @@ import { db } from "@/lib/db";
 import {
   devotionals,
   devotionalComments,
+  user,
 } from "@/lib/db/schema";
 
 
@@ -76,30 +77,47 @@ export async function createDevotional(
 
 export async function saveReflection(
   devotionalId: string,
-  comment: string
+  comment: string,
+  visibility: "private" | "group" = "private"
 ) {
-  const session =
-    await auth.api.getSession({
-      headers:
-        await headers(),
-    });
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!session?.user) {
-    throw new Error(
-      "User not found"
-    );
+    throw new Error("User not found");
   }
 
-  await db
-    .insert(
-      devotionalComments
-    )
-    .values({
-      devotionalId,
-      userId:
-        session.user.id,
-      comment,
-    });
+  const [existing] = await db
+    .select()
+    .from(devotionalComments)
+    .where(
+      and(
+        eq(devotionalComments.devotionalId, devotionalId),
+        eq(devotionalComments.userId, session.user.id)
+      )
+    );
+
+  if (existing) {
+    await db
+      .update(devotionalComments)
+      .set({ comment, visibility })
+      .where(eq(devotionalComments.id, existing.id));
+  } else {
+    await db
+      .insert(devotionalComments)
+      .values({
+        devotionalId,
+        userId: session.user.id,
+        comment,
+        visibility,
+      });
+
+    await db
+      .update(user)
+      .set({ points: sql`${user.points} + 10` })
+      .where(eq(user.id, session.user.id));
+  }
 
   return {
     success: true,

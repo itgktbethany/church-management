@@ -8,10 +8,11 @@ import {
   Clock3,
 } from "lucide-react";
 
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 import { db } from "@/lib/db";
-import { devotionals } from "@/lib/db/schema";
+import { devotionals, devotionalComments } from "@/lib/db/schema";
+import { getSession } from "@/lib/session";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,14 +35,28 @@ export default async function DevotionalDetailPage({
 
   const { id } = await params;
 
+  const session = await getSession();
+
   const devotional =
     await db.select()
       .from(devotionals)
       .where(eq(devotionals.id, id));
 
-
-
   const devotionalData = devotional[0];
+
+  let existingReflection = null;
+  if (session?.user && devotionalData) {
+    const [reflection] = await db
+      .select()
+      .from(devotionalComments)
+      .where(
+        and(
+          eq(devotionalComments.devotionalId, devotionalData.id),
+          eq(devotionalComments.userId, session.user.id)
+        )
+      );
+    existingReflection = reflection || null;
+  }
     if (!devotionalData) {
     return notFound();
   }
@@ -126,6 +141,7 @@ export default async function DevotionalDetailPage({
 
       <DevotionalReflectionForm
         devotionalId={id}
+        existingReflection={existingReflection}
       />
 
     </div>
