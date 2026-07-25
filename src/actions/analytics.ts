@@ -54,7 +54,7 @@ export async function getMemberAnalytics(groupId: string) {
           .from(userMinistries)
           .innerJoin(ministries, eq(userMinistries.ministryId, ministries.id))
           .where(and(eq(userMinistries.userId, member.id), eq(userMinistries.status, "active")));
-        
+
         const ministryList = userMins.map(m => m.name);
 
         // 4. Active Status
@@ -70,7 +70,7 @@ export async function getMemberAnalytics(groupId: string) {
         };
       })
     );
-
+    // push to git
     // Sort active first, then by points
     analytics.sort((a, b) => {
       if (a.isActive && !b.isActive) return -1;
