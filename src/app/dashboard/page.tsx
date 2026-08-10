@@ -14,8 +14,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { NotificationTestButton } from "@/components/dashboard/notification-test-button";
-import { SendTestNotificationButton } from "@/components/dashboard/send-test-notification-button";
 import { getDashboardData } from "@/actions/dashboard";
 import { redirect } from "next/navigation";
 
@@ -339,10 +337,6 @@ export default async function DashboardPage() {
             Continue Today's Devotional
           </Link>
         </Button>
-      </div>
-      <NotificationTestButton/>
-      <div>
-        <SendTestNotificationButton />
       </div>
     </div>
   );
