@@ -9,7 +9,9 @@ import {
   User,
   Settings,
   Shield,
-  AlarmClock
+  AlarmClock,
+  Coins,
+  Ticket
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -41,6 +43,11 @@ const menuItems = [
     icon: User,
   },
   {
+    title: "My Points",
+    href: "/dashboard/points",
+    icon: Coins,
+  },
+  {
     title: "Settings",
     href: "/dashboard/settings",
     icon: Settings,
@@ -67,6 +74,16 @@ const adminMenuItems = [
     title: "Ministries Management",
     href: "/dashboard/admin/ministries",
     icon: BookOpen,
+  },
+  {
+    title: "Event Management",
+    href: "/dashboard/admin/events",
+    icon: Ticket,
+  },
+  {
+    title: "Points Management",
+    href: "/dashboard/admin/points",
+    icon: Coins,
   },
 ];
 

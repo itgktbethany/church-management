@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Plus, Upload } from "lucide-react";
-
 import { DevotionalTable } from "@/components/admin/devotionals/devotional-table";
 import { CreateDevotionalDialog } from "@/components/admin/devotionals/create-devotional-dialog";
 import { BulkUploadDialog } from "@/components/admin/devotionals/bulk-upload-dialog";
+import { DownloadTemplateButton } from "@/components/admin/download-template-button";
 
 export default function AdminDevotionalsPage() {
   return (
@@ -21,6 +19,8 @@ export default function AdminDevotionalsPage() {
         </div>
 
         <div className="flex gap-2">
+          <DownloadTemplateButton type="devotionals" />
+
           <BulkUploadDialog />
 
           <CreateDevotionalDialog />

@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 
 import { Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { DownloadTemplateButton } from "@/components/admin/download-template-button";
 
 type DevotionalRow = {
   title: string;
@@ -159,6 +160,15 @@ function validateRows(
         </DialogHeader>
 
         <div className="space-y-4">
+
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              Upload an Excel file with columns: <strong>title</strong>,{" "}
+              <strong>verse</strong>, <strong>bible_reading</strong>,{" "}
+              <strong>content</strong>, <strong>publishDate</strong>
+            </p>
+            <DownloadTemplateButton type="devotionals" variant="ghost" />
+          </div>
 
           <input
   type="file"

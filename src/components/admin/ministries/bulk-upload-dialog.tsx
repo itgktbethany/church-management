@@ -1,6 +1,6 @@
 "use client";
 
-import { bulkCreateGroups } from "@/actions/group";
+import { bulkCreateMinistries } from "@/actions/ministry";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,17 +19,17 @@ import { Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DownloadTemplateButton } from "@/components/admin/download-template-button";
 
-type GroupRow = {
+type MinistryRow = {
   name: string;
   description: string;
   valid?: boolean;
 };
 
-export function BulkUploadDialog() {
+export function BulkUploadMinistryDialog() {
   const [isUploading, setIsUploading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const [data, setData] = useState<GroupRow[]>([]);
+  const [data, setData] = useState<MinistryRow[]>([]);
 
   async function handleSubmit() {
     if (isUploading) return;
@@ -44,14 +44,14 @@ export function BulkUploadDialog() {
         return;
       }
 
-      const result = await bulkCreateGroups(validRows);
+      const result = await bulkCreateMinistries(validRows);
 
       if (!result.success) {
         toast.error(result.message);
         return;
       }
 
-      toast.success(`${validRows.length} groups uploaded`);
+      toast.success(`${validRows.length} ministries uploaded`);
       setData([]);
       setOpen(false);
       router.refresh();
@@ -60,7 +60,7 @@ export function BulkUploadDialog() {
     }
   }
 
-  function validateRows(rows: GroupRow[]) {
+  function validateRows(rows: MinistryRow[]) {
     return rows.map((row) => ({
       ...row,
       valid: !!row.name,
@@ -82,7 +82,7 @@ export function BulkUploadDialog() {
 
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
       const json = XLSX.utils.sheet_to_json(sheet);
-      const validatedData = validateRows(json as GroupRow[]);
+      const validatedData = validateRows(json as MinistryRow[]);
       setData(validatedData);
     };
 
@@ -100,7 +100,7 @@ export function BulkUploadDialog() {
 
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Bulk Upload Groups</DialogTitle>
+          <DialogTitle>Bulk Upload Ministries</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -109,7 +109,7 @@ export function BulkUploadDialog() {
               Upload an Excel file with columns: <strong>name</strong>,{" "}
               <strong>description</strong>
             </p>
-            <DownloadTemplateButton type="groups" variant="ghost" />
+            <DownloadTemplateButton type="ministries" variant="ghost" />
           </div>
 
           <input
@@ -158,7 +158,7 @@ export function BulkUploadDialog() {
               data.every((item) => !item.valid)
             }
           >
-            {isUploading ? "Uploading..." : "Upload Groups"}
+            {isUploading ? "Uploading..." : "Upload Ministries"}
           </Button>
         </div>
       </DialogContent>

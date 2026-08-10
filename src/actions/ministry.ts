@@ -119,3 +119,43 @@ export async function unassignUserFromMinistry(userId: string, ministryId: strin
     return { success: false, message: "Failed to remove assignment" };
   }
 }
+
+// ====================
+// BULK CREATE MINISTRIES
+// ====================
+
+type BulkMinistryInput = {
+  name: string;
+  description: string;
+};
+
+export async function bulkCreateMinistries(
+  data: BulkMinistryInput[]
+) {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session?.user) throw new Error("Unauthorized");
+    const [dbUser] = await db.select({ role: user.role }).from(user).where(eq(user.id, session.user.id));
+    if (dbUser?.role !== "admin") throw new Error("Unauthorized");
+
+    await db
+      .insert(ministries)
+      .values(
+        data.map((item) => ({
+          name: item.name,
+          description: item.description || null,
+        }))
+      );
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Bulk create ministries error:", error);
+
+    return {
+      success: false,
+      message: "Bulk upload failed",
+    };
+  }
+}

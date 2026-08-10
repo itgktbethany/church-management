@@ -407,3 +407,40 @@ export async function getGroupMembers(groupId: string) {
     };
   }
 }
+
+// ====================
+// BULK CREATE GROUPS
+// ====================
+
+type BulkGroupInput = {
+  name: string;
+  description: string;
+};
+
+export async function bulkCreateGroups(
+  data: BulkGroupInput[]
+) {
+  try {
+    await db
+      .insert(groups)
+      .values(
+        data.map((item) => ({
+          name: item.name,
+          description: item.description || null,
+        }))
+      );
+
+    revalidatePath("/dashboard/admin/groups");
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Bulk create groups error:", error);
+
+    return {
+      success: false,
+      message: "Bulk upload failed",
+    };
+  }
+}

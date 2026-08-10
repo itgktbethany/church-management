@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-
 import { AlertTable } from "@/components/admin/alerts/alert-table";
 import { CreateAlertDialog } from "@/components/admin/alerts/create-alert-dialog";
+import { BulkUploadDialog } from "@/components/admin/alerts/bulk-upload-dialog";
+import { DownloadTemplateButton } from "@/components/admin/download-template-button";
 
 export default function AdminAlertsPage() {
   return (
@@ -18,7 +17,13 @@ export default function AdminAlertsPage() {
           </p>
         </div>
 
-        <CreateAlertDialog />
+        <div className="flex gap-2">
+          <DownloadTemplateButton type="alerts" />
+
+          <BulkUploadDialog />
+
+          <CreateAlertDialog />
+        </div>
       </div>
 
       <AlertTable />

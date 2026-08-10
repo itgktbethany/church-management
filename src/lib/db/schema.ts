@@ -141,3 +141,4 @@ export * from "./auth-schema";
 export * from "./alert-schema"
 export * from "./group-schema"
 export * from "./ministry-schema"
+export * from "./points-schema"

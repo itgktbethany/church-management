@@ -1,24 +1,29 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-
 import { GroupTable } from "@/components/admin/groups/group-table";
 import { CreateGroupDialog } from "@/components/admin/groups/create-group-dialog";
+import { BulkUploadDialog } from "@/components/admin/groups/bulk-upload-dialog";
+import { DownloadTemplateButton } from "@/components/admin/download-template-button";
 
-export default function AdminAlertsPage() {
+export default function AdminGroupsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">
-            Alert Management
+            Group Management
           </h1>
 
           <p className="text-muted-foreground">
-            Manage church announcements and notifications.
+            Manage church groups and their members.
           </p>
         </div>
 
-        <CreateGroupDialog />
+        <div className="flex gap-2">
+          <DownloadTemplateButton type="groups" />
+
+          <BulkUploadDialog />
+
+          <CreateGroupDialog />
+        </div>
       </div>
 
       <GroupTable />

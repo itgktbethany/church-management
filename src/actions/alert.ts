@@ -171,3 +171,44 @@ export async function toggleAlert(
     };
   }
 }
+
+// ====================
+// BULK CREATE ALERTS
+// ====================
+
+type BulkAlertInput = {
+  title: string;
+  message: string;
+  send_push: string;
+  target_type: string;
+  display_at: string;
+};
+
+export async function bulkCreateAlerts(
+  data: BulkAlertInput[]
+) {
+  try {
+    await db
+      .insert(alerts)
+      .values(
+        data.map((item) => ({
+          title: item.title,
+          message: item.message,
+          sendPush: item.send_push?.toLowerCase() === "true",
+          targetType: item.target_type || "all",
+          displayAt: item.display_at ? new Date(item.display_at) : null,
+        }))
+      );
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Bulk create alerts error:", error);
+
+    return {
+      success: false,
+      message: "Bulk upload failed",
+    };
+  }
+}

@@ -13,6 +13,8 @@ import {
   Shield,
   AlarmClock,
   Users,
+  Coins,
+  Ticket
 } from "lucide-react";
 
 import {
@@ -49,6 +51,11 @@ const menuItems = [
     icon: UserCircle2,
   },
   {
+    title: "My Points",
+    href: "/dashboard/points",
+    icon: Coins,
+  },
+  {
     title: "Settings",
     href: "/dashboard/settings",
     icon: Settings,
@@ -75,6 +82,16 @@ const adminMenuItems = [
     title: "Ministries Management",
     href: "/dashboard/admin/ministries",
     icon: BookOpen,
+  },
+  {
+    title: "Event Management",
+    href: "/dashboard/admin/events",
+    icon: Ticket,
+  },
+  {
+    title: "Points Management",
+    href: "/dashboard/admin/points",
+    icon: Coins,
   },
 ];
 

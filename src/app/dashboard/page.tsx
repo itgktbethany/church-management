@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import {
   BookOpen,
@@ -16,9 +14,10 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect } from "react";
 import { NotificationTestButton } from "@/components/dashboard/notification-test-button";
-import { sendTestNotification } from "@/actions/send-test-notification";
+import { SendTestNotificationButton } from "@/components/dashboard/send-test-notification-button";
+import { getDashboardData } from "@/actions/dashboard";
+import { redirect } from "next/navigation";
 
 const smartButtons = [
   {
@@ -53,70 +52,17 @@ const smartButtons = [
   },
 ];
 
-const recentActivities = [
-  {
-    id: 1,
-    title: "You completed today's devotional",
-    points: "+20 Points",
-  },
-  {
-    id: 2,
-    title: "You submitted a reflection",
-    points: "+10 Points",
-  },
-  {
-    id: 3,
-    title: "7 day streak maintained",
-    points: "+50 Points",
-  },
-];
-
-// import { createClient } from "@/lib/supabase/client";
-
-type Devotional = {
-  id: string;
-  title: string;
-  verse: string;
-  content: string;
-  publishDate: string;
-};
-
-export default function DashboardPage() {
-  //  const supabase = createClient();
-
-  const [devotional, setDevotional] =
-    useState<Devotional | null>(null);
-
-  const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const fetchDevotional = async () => {
-  //     const today = new Date()
-  //       .toISOString()
-  //       .split("T")[0];
-
-  //     const { data, error } = await supabase
-  //       .from("devotionals")
-  //       .select("*")
-  //       .lte("publish_date", today)
-  //       .order("publish_date", {
-  //         ascending: false,
-  //       })
-  //       .limit(1)
-  //       .single();
-
-  //     if (!error && data) {
-  //       setDevotional(data);
-  //     }
-
-  //     setLoading(false);
-  //   };
-
-  //   fetchDevotional();
-  // }, []);
-
-  const devotionalHref = devotional
-    ? `/dashboard/devotionals/${devotional.id}`
+export default async function DashboardPage() {
+  const data = await getDashboardData();
+  
+  if (!data) {
+    redirect("/login");
+  }
+  
+  const { user, todayDevotional, stats, recentActivities, progress } = data;
+  
+  const devotionalHref = todayDevotional
+    ? `/dashboard/devotionals/${todayDevotional.id}`
     : "/dashboard/devotionals";
 
   return (
@@ -128,7 +74,7 @@ export default function DashboardPage() {
 
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Shalom, Nicholas 👋
+            Shalom, {user.name} 👋
           </h1>
 
           <p className="text-muted-foreground mt-2">
@@ -146,20 +92,32 @@ export default function DashboardPage() {
                   Daily Devotional
                 </Badge>
 
-                <div>
-                  <h2 className="text-2xl font-bold md:text-4xl">
-                    Faith Over Fear
-                  </h2>
+                {todayDevotional ? (
+                  <>
+                    <div>
+                      <h2 className="text-2xl font-bold md:text-4xl">
+                        {todayDevotional.title}
+                      </h2>
 
-                  <p className="mt-2 text-zinc-300">
-                    Isaiah 41:10
-                  </p>
-                </div>
+                      <p className="mt-2 text-zinc-300">
+                        {todayDevotional.verse}
+                      </p>
+                    </div>
 
-                <p className="text-sm leading-relaxed text-zinc-300 md:text-base">
-                  Learn how to trust God even during uncertainty and difficult
-                  situations.
-                </p>
+                    <p className="text-sm leading-relaxed text-zinc-300 md:text-base line-clamp-2">
+                      {todayDevotional.content}
+                    </p>
+                  </>
+                ) : (
+                  <div>
+                    <h2 className="text-2xl font-bold md:text-4xl">
+                      No Devotional Today
+                    </h2>
+                    <p className="mt-2 text-zinc-300">
+                      Check back later for today's reading.
+                    </p>
+                  </div>
+                )}
 
                 <div className="flex flex-wrap items-center gap-3">
                   <Button
@@ -186,7 +144,7 @@ export default function DashboardPage() {
                       Current Streak
                     </div>
 
-                    <p className="text-3xl font-bold">7</p>
+                    <p className="text-3xl font-bold">{stats.streak}</p>
                   </CardContent>
                 </Card>
 
@@ -197,7 +155,7 @@ export default function DashboardPage() {
                       Total Points
                     </div>
 
-                    <p className="text-3xl font-bold">1,240</p>
+                    <p className="text-3xl font-bold">{stats.totalPoints}</p>
                   </CardContent>
                 </Card>
 
@@ -208,7 +166,7 @@ export default function DashboardPage() {
                       Devotionals
                     </div>
 
-                    <p className="text-3xl font-bold">32</p>
+                    <p className="text-3xl font-bold">{stats.devotionals}</p>
                   </CardContent>
                 </Card>
 
@@ -219,7 +177,7 @@ export default function DashboardPage() {
                       Reflections
                     </div>
 
-                    <p className="text-3xl font-bold">18</p>
+                    <p className="text-3xl font-bold">{stats.reflections}</p>
                   </CardContent>
                 </Card>
               </div>
@@ -281,13 +239,19 @@ export default function DashboardPage() {
                 <div>
                   <p className="font-medium">Read devotional</p>
                   <p className="text-sm text-muted-foreground">
-                    Daily devotional completed
+                    {todayDevotional ? "Daily devotional available" : "No devotional today"}
                   </p>
                 </div>
 
-                <Badge className="rounded-full bg-green-600 hover:bg-green-600">
-                  Completed
-                </Badge>
+                {progress.devotional ? (
+                  <Badge className="rounded-full bg-green-600 hover:bg-green-600">
+                    Completed
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary" className="rounded-full">
+                    Pending
+                  </Badge>
+                )}
               </div>
 
               <div className="flex items-center justify-between rounded-2xl border p-4">
@@ -298,9 +262,15 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                <Badge variant="secondary" className="rounded-full">
-                  Pending
-                </Badge>
+                {progress.reflection ? (
+                  <Badge className="rounded-full bg-green-600 hover:bg-green-600">
+                    Completed
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary" className="rounded-full">
+                    Pending
+                  </Badge>
+                )}
               </div>
 
               <div className="flex items-center justify-between rounded-2xl border p-4">
@@ -330,24 +300,30 @@ export default function DashboardPage() {
             </div>
 
             <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-center justify-between rounded-2xl border p-4"
-                >
-                  <div className="space-y-1">
-                    <p className="font-medium">{activity.title}</p>
+              {recentActivities.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No recent activities
+                </p>
+              ) : (
+                recentActivities.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-center justify-between rounded-2xl border p-4"
+                  >
+                    <div className="space-y-1">
+                      <p className="font-medium">{activity.title}</p>
 
-                    <p className="text-sm text-muted-foreground">
-                      Activity reward earned
-                    </p>
+                      <p className="text-sm text-muted-foreground">
+                        {activity.type === "add" ? "Points earned" : "Points redeemed"}
+                      </p>
+                    </div>
+
+                    <Badge className="rounded-full">
+                      {activity.points}
+                    </Badge>
                   </div>
-
-                  <Badge className="rounded-full">
-                    {activity.points}
-                  </Badge>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
@@ -366,11 +342,7 @@ export default function DashboardPage() {
       </div>
       <NotificationTestButton/>
       <div>
-        <Button onClick={async()=>{
-          await sendTestNotification();
-        }}>
-          send Test Notification
-        </Button>
+        <SendTestNotificationButton />
       </div>
     </div>
   );
