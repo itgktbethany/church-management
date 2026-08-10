@@ -57,26 +57,18 @@ export async function getMemberAnalytics(groupId: string) {
 
         const ministryList = userMins.map(m => m.name);
 
-        // 4. Active Status
-        const isActive = hasRecentDevotional || ministryList.length > 0;
-
         return {
           id: member.id,
           name: member.name || member.email,
           points: member.points,
           totalDevotionals,
           ministries: ministryList,
-          isActive,
         };
       })
     );
     // push to git
-    // Sort active first, then by points
-    analytics.sort((a, b) => {
-      if (a.isActive && !b.isActive) return -1;
-      if (!a.isActive && b.isActive) return 1;
-      return b.points - a.points;
-    });
+    // Sort by points
+    analytics.sort((a, b) => b.points - a.points);
 
     return { success: true, data: analytics };
   } catch (error) {

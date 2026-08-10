@@ -48,7 +48,7 @@ export default async function GroupReportingPage(props: PageProps) {
       <Card>
         <CardHeader>
           <CardTitle>Analytics Report</CardTitle>
-          <CardDescription>Members are sorted by active status and total points.</CardDescription>
+          <CardDescription>Members are sorted by total points.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -58,7 +58,6 @@ export default async function GroupReportingPage(props: PageProps) {
                 <TableHead>Devotionals</TableHead>
                 <TableHead>Ministries</TableHead>
                 <TableHead>Points</TableHead>
-                <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -78,18 +77,11 @@ export default async function GroupReportingPage(props: PageProps) {
                     )}
                   </TableCell>
                   <TableCell>{member.points}</TableCell>
-                  <TableCell>
-                    {member.isActive ? (
-                      <Badge variant="default" className="bg-green-600 hover:bg-green-700">Active</Badge>
-                    ) : (
-                      <Badge variant="secondary">Inactive</Badge>
-                    )}
-                  </TableCell>
                 </TableRow>
               ))}
               {analytics.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                  <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
                     No members found in this group.
                   </TableCell>
                 </TableRow>
