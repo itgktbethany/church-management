@@ -15,8 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Church Management System",
-  description: "Church engagement and devotional platform",
+  title: "GKT Bethany CHMS",
+  description: "Church Management System for GKT Bethany",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "GKT Bethany CHMS",
+  },
 };
 
 export default function RootLayout({
