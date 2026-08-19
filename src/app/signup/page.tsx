@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 // import { createClient } from "@/lib/supabase/client";
 
@@ -13,7 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-  import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 
 export default function SignupPage() {
@@ -33,8 +34,8 @@ export default function SignupPage() {
   const [email, setEmail] =
     useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // const handleSignup = async () => {
   //   try {
@@ -92,30 +93,30 @@ export default function SignupPage() {
   //   }
   // };
 
-async function handleSignup() {
-  try {
-    setLoading(true);
-    setError("");
+  async function handleSignup() {
+    try {
+      setLoading(true);
+      setError("");
 
-    const { error: authError } = await authClient.signUp.email({
-      name: fullName,
-      email,
-      password,
-    });
+      const { error: authError } = await authClient.signUp.email({
+        name: fullName,
+        email,
+        password,
+      });
 
-    if (authError) {
-      setError(authError.message ?? "Signup Failed");
-      return;
+      if (authError) {
+        setError(authError.message ?? "Signup Failed");
+        return;
+      }
+
+      toast.success("Account created successfully");
+      router.push("/dashboard");
+    } catch {
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Account created successfully");
-    router.push("/dashboard");
-  } catch {
-    setError("Something went wrong");
-  } finally {
-    setLoading(false);
   }
-}
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
@@ -156,27 +157,39 @@ async function handleSignup() {
               }
               disabled={loading}
             />
-            
+
           </div>
 
           <div className="space-y-2">
             <Label>Password</Label>
 
-            <Input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-              disabled={loading}
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                tabIndex={-1}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <Eye className="h-4 w-4" />
+                ) : (
+                  <EyeOff className="h-4 w-4" />
+                )}
+              </button>
+            </div>
 
-{error && (
-  <p className="text-sm text-red-500">
-    {error}
-  </p>
-)}
+            {error && (
+              <p className="text-sm text-red-500">{error}</p>
+            )}
           </div>
 
           <Button
