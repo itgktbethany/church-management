@@ -118,6 +118,20 @@ export default function SignupPage() {
     }
   }
 
+  const handleGoogleSignup = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+    } catch {
+      setError("Google sign-in failed");
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <Card className="w-full max-w-md rounded-2xl shadow-sm">
@@ -214,6 +228,7 @@ export default function SignupPage() {
             variant="outline"
             className="w-full"
             disabled={loading}
+            onClick={handleGoogleSignup}
           >
             Continue with Google
           </Button>
