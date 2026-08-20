@@ -26,10 +26,10 @@ console.log(dbUser);
     <div className="flex h-screen overflow-hidden bg-muted/30">
       <Sidebar  role={dbUser?.role ?? "member"}/>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="relative flex flex-1 flex-col overflow-hidden">
         <Topbar role={dbUser?.role ?? "member"} />
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main id="main-scroll-area" className="flex-1 overflow-y-auto p-4 pt-20 md:p-6">
           {children}
         </main>
       </div>

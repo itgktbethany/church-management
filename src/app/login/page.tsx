@@ -89,6 +89,7 @@ export default function LoginPage() {
         });
 
       if (loginError) {
+        toast.error("Invalid email or password");
         setError(
           loginError.message ?? "Login failed"
         );
@@ -100,6 +101,7 @@ export default function LoginPage() {
       router.push("/dashboard");
 
     } catch {
+      toast.error("Something went wrong");
       setError("Something went wrong");
     } finally {
       setLoading(false);

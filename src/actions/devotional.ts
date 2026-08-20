@@ -9,6 +9,9 @@ import { db } from "@/lib/db";
 import {
   devotionals,
   devotionalComments,
+  devotionalCompletions,
+  events,
+  pointTransactions,
   user,
 } from "@/lib/db/schema";
 
@@ -112,6 +115,34 @@ export async function saveReflection(
         comment,
         visibility,
       });
+
+    await db.insert(devotionalCompletions).values({
+      userId: session.user.id,
+      devotionalId,
+    });
+
+    let event = await db.query.events.findFirst({
+      where: eq(events.name, "Devotional Completion"),
+    });
+
+    if (!event) {
+      const [newEvent] = await db
+        .insert(events)
+        .values({
+          name: "Devotional Completion",
+          type: "add",
+          defaultPoints: 10,
+        })
+        .returning();
+      event = newEvent;
+    }
+
+    await db.insert(pointTransactions).values({
+      userId: session.user.id,
+      eventId: event.id,
+      type: "add",
+      amount: 10,
+    });
 
     await db
       .update(user)

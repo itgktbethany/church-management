@@ -75,9 +75,16 @@ export default async function DevotionalDetailPage({
           </Button>
         </Link>
 
-        <Badge variant="secondary">
-          Daily Devotional
-        </Badge>
+        <div className="flex items-center gap-2">
+          {existingReflection && (
+            <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+              Completed
+            </Badge>
+          )}
+          <Badge variant="secondary">
+            Daily Devotional
+          </Badge>
+        </div>
       </div>
 
       <div className="space-y-4">

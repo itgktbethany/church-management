@@ -51,7 +51,7 @@ export function DevotionalTabs({
         </TabsTrigger>
 
         <TabsTrigger value="notes">
-          Notes
+          Reflection
         </TabsTrigger>
       </TabsList>
 

@@ -8,6 +8,9 @@ import { RedeemEventList } from "@/components/points/redeem-event-list";
 import { UnusedRedemptionsList } from "@/components/points/unused-redemptions-list";
 
 import { headers } from "next/headers";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default async function RedeemPointsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -28,6 +31,12 @@ export default async function RedeemPointsPage() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div>
+        <Link href="/dashboard/points" className="inline-block mb-4">
+          <Button variant="ghost" className="gap-2 px-0 hover:bg-transparent">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Points
+          </Button>
+        </Link>
         <h1 className="text-3xl font-bold">Redeem Points</h1>
         <p className="text-muted-foreground">Exchange your points for rewards.</p>
         <p className="font-semibold mt-2 text-lg">Your Balance: {totalPoints} pts</p>
