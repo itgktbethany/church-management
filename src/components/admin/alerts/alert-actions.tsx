@@ -19,6 +19,8 @@ type Props = {
     sendPush: boolean;
     targetType: string;
     displayAt: Date | null;
+    scheduleType: string | null;
+    cronExpression: string | null;
   };
 };
 

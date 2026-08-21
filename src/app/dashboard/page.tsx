@@ -271,7 +271,7 @@ export default async function DashboardPage() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between rounded-2xl border p-4">
+              <div className="flex items-center justify-between rounded-2xl border border-dashed p-4 opacity-60">
                 <div>
                   <p className="font-medium">Prayer time</p>
                   <p className="text-sm text-muted-foreground">
@@ -279,8 +279,8 @@ export default async function DashboardPage() {
                   </p>
                 </div>
 
-                <Badge variant="secondary" className="rounded-full">
-                  Pending
+                <Badge variant="outline" className="rounded-full text-xs">
+                  Not tracked
                 </Badge>
               </div>
             </div>

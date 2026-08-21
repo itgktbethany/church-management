@@ -29,7 +29,7 @@ export default async function DashboardLayout({
       <div className="relative flex flex-1 flex-col overflow-hidden">
         <Topbar role={dbUser?.role ?? "member"} />
 
-        <main id="main-scroll-area" className="flex-1 overflow-y-auto p-4 pt-20 pb-20 md:p-6 md:pb-6">
+        <main id="main-scroll-area" className="flex-1 overflow-y-auto p-4 pt-20 pb-24 md:p-6 md:pb-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 5rem)" }}>
           {children}
         </main>
       </div>

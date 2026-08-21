@@ -29,6 +29,8 @@ type CreateAlertInput = {
   sendPush: boolean;
   targetType: string;
   displayAt: Date | null;
+  scheduleType: string;
+  cronExpression?: string | null;
 };
 
 export async function createAlert(
@@ -43,7 +45,9 @@ export async function createAlert(
         message: data.message,
         sendPush: data.sendPush,
         targetType: data.targetType,
-        displayAt: data.displayAt
+        displayAt: data.displayAt,
+        scheduleType: data.scheduleType,
+        cronExpression: data.cronExpression ?? null,
       });
 
     return {
@@ -99,7 +103,9 @@ type UpdateAlertInput = {
   message: string;
   sendPush: boolean;
   targetType: string;
-  displayAt: Date | null; 
+  displayAt: Date | null;
+  scheduleType: string;
+  cronExpression?: string | null;
 };
 
 export async function updateAlert(
@@ -114,7 +120,9 @@ export async function updateAlert(
         message: data.message,
         sendPush: data.sendPush,
         targetType: data.targetType,
-        displayAt : data.displayAt,
+        displayAt: data.displayAt,
+        scheduleType: data.scheduleType,
+        cronExpression: data.cronExpression ?? null,
         updatedAt: new Date(),
       })
       .where(
@@ -129,7 +137,7 @@ export async function updateAlert(
       message: "Alert updated Successfully"
     };
 
-  } catch (error){
+  } catch (error) {
     console.error(error)
     return {
       success: false,

@@ -57,6 +57,10 @@ export async function AlertTable() {
                   </th>
 
                   <th className="p-5 text-left">
+                    Schedule
+                  </th>
+
+                  <th className="p-5 text-left">
                     Actions
                   </th>
                 </tr>
@@ -113,15 +117,26 @@ export async function AlertTable() {
                     </td>
 
                     <td className="p-5">
-                      <Badge
-                        variant="outline"
-                      >
+                      <Badge variant="outline">
                         {alert.targetType}
                       </Badge>
                     </td>
-                      <td className="p-5">
+
+                    <td className="p-5">
+                      <Badge variant={alert.scheduleType === "recurring" ? "default" : "secondary"}>
+                        {alert.scheduleType === "recurring"
+                          ? `Recurring`
+                          : "One-time"}
+                      </Badge>
+                      {alert.scheduleType === "recurring" && alert.cronExpression && (
+                        <p className="mt-1 text-xs text-muted-foreground font-mono">
+                          {alert.cronExpression}
+                        </p>
+                      )}
+                    </td>
+
+                    <td className="p-5">
                       <AlertActions alert={alert}/>
-                        
                     </td>
                   </tr>
                 ))}

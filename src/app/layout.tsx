@@ -1,9 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { FirebaseServiceWorkerRegistrar } from "@/components/firebase-service-worker-registrar";
+import { FirebaseForegroundHandler } from "@/components/firebase-foreground-handler";
+
+export const viewport: Viewport = {
+  // Required for env(safe-area-inset-*) to work on iPhone
+  viewportFit: "cover",
+  width: "device-width",
+  initialScale: 1,
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +51,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {/* Registers firebase-messaging-sw.js on all platforms, required for iOS */}
         <FirebaseServiceWorkerRegistrar />
+        <FirebaseForegroundHandler />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

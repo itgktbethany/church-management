@@ -33,8 +33,8 @@ export async function sendPushToAll(
             title,
             body,
             // icon is required — iOS silently drops notifications without one
-            icon: "/icons/icon-192x192.png",
-            badge: "/icons/icon-192x192.png",
+            icon: "/gkt-logo.png",
+            badge: "/gkt-logo.png",
           },
         },
       });

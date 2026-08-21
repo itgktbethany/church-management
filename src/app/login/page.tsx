@@ -64,15 +64,16 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      setLoading(true);
       setError("");
+      // Don't set loading=true here — authClient.signIn.social redirects the
+      // browser to Google. If the user cancels, they return to this page and
+      // loading would stay true forever, freezing the buttons.
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "/dashboard",
       });
     } catch {
       setError("Google sign-in failed");
-      setLoading(false);
     }
   };
 
