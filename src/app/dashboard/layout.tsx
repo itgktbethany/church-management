@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
+import { BottomTabBar } from "@/components/dashboard/bottom-tab-bar";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
@@ -21,7 +22,6 @@ export default async function DashboardLayout({
   where: eq(user.id, session.user.id),
   
 });
-console.log(dbUser);
   return (
     <div className="flex h-screen overflow-hidden bg-muted/30">
       <Sidebar  role={dbUser?.role ?? "member"}/>
@@ -29,10 +29,13 @@ console.log(dbUser);
       <div className="relative flex flex-1 flex-col overflow-hidden">
         <Topbar role={dbUser?.role ?? "member"} />
 
-        <main id="main-scroll-area" className="flex-1 overflow-y-auto p-4 pt-20 md:p-6">
+        <main id="main-scroll-area" className="flex-1 overflow-y-auto p-4 pt-20 pb-20 md:p-6 md:pb-6">
           {children}
         </main>
       </div>
+
+      {/* Mobile bottom tab bar — hidden on desktop */}
+      <BottomTabBar role={dbUser?.role ?? "member"} />
     </div>
   );
 }

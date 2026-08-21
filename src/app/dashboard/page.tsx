@@ -52,13 +52,13 @@ const smartButtons = [
 
 export default async function DashboardPage() {
   const data = await getDashboardData();
-  
+
   if (!data) {
     redirect("/login");
   }
-  
+
   const { user, todayDevotional, stats, recentActivities, progress } = data;
-  
+
   const devotionalHref = todayDevotional
     ? `/dashboard/devotionals/${todayDevotional.id}`
     : "/dashboard/devotionals";
@@ -327,17 +327,7 @@ export default async function DashboardPage() {
         </Card>
       </section>
 
-      <div className="fixed bottom-4 left-4 right-4 z-50 md:hidden">
-        <Button
-          asChild
-          size="lg"
-          className="h-14 w-full rounded-2xl text-base font-semibold shadow-xl"
-        >
-          <Link href={devotionalHref}>
-            Continue Today's Devotional
-          </Link>
-        </Button>
-      </div>
+
     </div>
   );
 }

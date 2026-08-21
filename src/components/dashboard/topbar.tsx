@@ -84,7 +84,10 @@ export function Topbar({ role }: TopbarProps) {
       }`}
     >
       <div className="flex items-center gap-3">
-        <MobileSidebar role={role} />
+        {/* Hamburger hidden on mobile — replaced by bottom tab bar */}
+        <div className="hidden">
+          <MobileSidebar role={role} />
+        </div>
 
         <div>
           <h2 className="text-lg font-semibold">
