@@ -79,9 +79,8 @@ export function Topbar({ role }: TopbarProps) {
 
   return (
     <header
-      className={`absolute left-0 right-0 top-0 z-10 flex h-16 shrink-0 items-center justify-between border-b bg-background px-4 transition-transform duration-300 md:static md:translate-y-0 md:px-6 ${
-        isVisible ? "translate-y-0" : "-translate-y-full"
-      }`}
+      className={`absolute left-0 right-0 top-0 z-10 flex h-16 shrink-0 items-center justify-between border-b bg-background px-4 transition-transform duration-300 md:static md:translate-y-0 md:px-6 ${isVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
     >
       <div className="flex items-center gap-3">
         {/* Hamburger hidden on mobile — replaced by bottom tab bar */}
@@ -91,7 +90,7 @@ export function Topbar({ role }: TopbarProps) {
 
         <div>
           <h2 className="text-lg font-semibold">
-            Dashboard
+            My MSK
           </h2>
         </div>
       </div>
