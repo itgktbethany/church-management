@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
@@ -27,55 +28,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  // const handleLogin = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     const { error } =
-  //       await supabase.auth.signInWithPassword({
-  //         email,
-  //         password,
-  //       });
-
-  //     if (error) {
-  //       toast.error(error.message);
-
-  //       return;
-  //     }
-
-  //     toast.success("You are logged in");
-
-  //     router.push("/dashboard");
-  //   } catch (error) {
-  //     toast.error(
-  //       "Something went wrong"
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     const origin = window.location.origin;
-
-  //     await supabase.auth.signInWithOAuth({
-  //       provider: "google",
-  //       options:{
-  //           redirectTo: `${origin}/auth/callback`
-  //       }
-  //     });
-  //   } catch (error) {
-  //     toast.error(
-  //       "Google login failed !"
-  //     );
-
-  //     setLoading(false);
-  //   }
-  // };
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -86,6 +39,7 @@ export default function LoginPage() {
         await authClient.signIn.email({
           email,
           password,
+          rememberMe,
         });
 
       if (loginError) {
@@ -176,6 +130,21 @@ export default function LoginPage() {
                 )}
               </button>
             </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="rememberMe" 
+              checked={rememberMe} 
+              onCheckedChange={(c) => setRememberMe(c as boolean)} 
+              disabled={loading}
+            />
+            <Label
+              htmlFor="rememberMe"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            >
+              Keep me signed in
+            </Label>
           </div>
 
           <Button
