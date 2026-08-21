@@ -62,8 +62,16 @@ export async function getGroupFeed(groupId: string) {
 
     // Filter for today
     const todaysFeed = feed.filter(item => {
-      const itemDate = new Date(item.createdAt);
-      return itemDate >= today;
+      // The database (Postgres) is running in GMT+8, but the `pg` driver parses 
+      // the timestamp without timezone as UTC. We subtract 8 hours here to restore the true UTC time.
+      const rawDate = new Date(item.createdAt);
+      const itemDate = new Date(rawDate.getTime() - (8 * 60 * 60 * 1000));
+      
+      // Filter for strictly today (between today 00:00:00 and tomorrow 00:00:00)
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      return itemDate >= today && itemDate < tomorrow;
     });
 
     return {

@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, MessageSquare, Lock, Activity } from "lucide-react";
 import { format } from "date-fns";
+import { LocalTime } from "@/components/ui/local-time";
 
 interface FeedItem {
   id: string;
@@ -63,7 +64,7 @@ export function GroupFeed({ feedItems }: GroupFeedProps) {
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium">{item.user.name}</p>
                       <span className="text-xs text-muted-foreground">
-                        {format(new Date(item.createdAt), "h:mm a")}
+                        <LocalTime date={item.createdAt} />
                       </span>
                     </div>
                     {!isPrivate && (
