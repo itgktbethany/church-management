@@ -17,9 +17,10 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// Firebase's handler — fires on Android/Chrome in the background
 messaging.onBackgroundMessage((payload) => {
   console.log(
-    "[firebase-messaging-sw.js] Background message",
+    "[firebase-messaging-sw.js] Background message (Firebase)",
     payload
   );
 
@@ -30,6 +31,37 @@ messaging.onBackgroundMessage((payload) => {
       icon: "/icons/icon-192x192.png",
       badge: "/icons/icon-192x192.png",
     }
+  );
+});
+
+// Native push event handler — required for iOS Safari Web Push.
+// Apple's WebKit fires the standard 'push' event and does NOT reliably
+// trigger Firebase's onBackgroundMessage wrapper, so we must handle it here.
+self.addEventListener("push", function (event) {
+  // If Firebase already handled this (Android/Chrome), skip
+  if (!event.data) return;
+
+  let title = "CHMS";
+  let body = "";
+
+  try {
+    const data = event.data.json();
+    // FCM wraps the payload under notification or data keys
+    title = data.notification?.title ?? data.data?.title ?? "CHMS";
+    body = data.notification?.body ?? data.data?.body ?? "";
+  } catch (e) {
+    // Fallback for plain-text payloads
+    body = event.data.text();
+  }
+
+  // event.waitUntil is MANDATORY on iOS — Safari requires showNotification
+  // to be called synchronously within the push event handler
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: "/icons/icon-192x192.png",
+      badge: "/icons/icon-192x192.png",
+    })
   );
 });
 

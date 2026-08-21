@@ -22,16 +22,16 @@ export async function requestNotificationPermission() {
       return null;
     }
 
-    // Explicitly pass the service worker registration.
-    // This is required on iOS to ensure FCM uses the correct SW scope.
-    const swRegistration = await navigator.serviceWorker.getRegistration(
-      "/firebase-messaging-sw.js"
-    );
+    // Wait for the service worker to be fully active before getting token.
+    // navigator.serviceWorker.ready resolves only when the SW is installed & active,
+    // preventing a race condition where the SW was registered but not yet controlling
+    // the page when getToken() is called (especially relevant on iOS first-load).
+    const swRegistration = await navigator.serviceWorker.ready;
 
     console.log("Getting FCM token...");
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
-      ...(swRegistration ? { serviceWorkerRegistration: swRegistration } : {}),
+      serviceWorkerRegistration: swRegistration,
     });
 
     console.log("FCM Token:", token);

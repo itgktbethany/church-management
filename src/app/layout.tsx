@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { FirebaseServiceWorkerRegistrar } from "@/components/firebase-service-worker-registrar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* Registers firebase-messaging-sw.js on all platforms, required for iOS */}
+        <FirebaseServiceWorkerRegistrar />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
