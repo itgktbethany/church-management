@@ -1,7 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, CheckCircle, Share2, Lock } from "lucide-react";
 
-export function GroupActivityCard() {
+interface GroupActivityCardProps {
+  completed: number;
+  rate: number;
+  shared: number;
+  privateCount: number;
+}
+
+export function GroupActivityCard({
+  completed = 0,
+  rate = 0,
+  shared = 0,
+  privateCount = 0,
+}: GroupActivityCardProps) {
   return (
     <Card className="mb-6 shadow-sm">
       <CardHeader className="pb-3">
@@ -17,28 +29,28 @@ export function GroupActivityCard() {
               <CheckCircle className="w-3.5 h-3.5" />
               Completed
             </span>
-            <p className="text-2xl font-semibold">-</p>
+            <p className="text-2xl font-semibold">{completed}</p>
           </div>
           <div className="space-y-1 p-3 bg-muted/30 rounded-lg">
             <span className="text-muted-foreground text-xs font-medium flex items-center gap-1 uppercase tracking-wider">
               <Activity className="w-3.5 h-3.5" />
               Rate
             </span>
-            <p className="text-2xl font-semibold">-</p>
+            <p className="text-2xl font-semibold">{rate}%</p>
           </div>
           <div className="space-y-1 p-3 bg-muted/30 rounded-lg">
             <span className="text-muted-foreground text-xs font-medium flex items-center gap-1 uppercase tracking-wider">
               <Share2 className="w-3.5 h-3.5" />
               Shared
             </span>
-            <p className="text-2xl font-semibold">-</p>
+            <p className="text-2xl font-semibold">{shared}</p>
           </div>
           <div className="space-y-1 p-3 bg-muted/30 rounded-lg">
             <span className="text-muted-foreground text-xs font-medium flex items-center gap-1 uppercase tracking-wider">
               <Lock className="w-3.5 h-3.5" />
               Private
             </span>
-            <p className="text-2xl font-semibold">-</p>
+            <p className="text-2xl font-semibold">{privateCount}</p>
           </div>
         </div>
       </CardContent>

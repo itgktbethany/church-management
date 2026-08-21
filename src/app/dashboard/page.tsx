@@ -123,7 +123,7 @@ export default async function DashboardPage() {
                     size="lg"
                     className="rounded-2xl bg-white text-black hover:bg-zinc-200"
                   >
-                    <Link href="/dashboard/devotionals/today">
+                    <Link href={devotionalHref}>
                       Start Reading
                     </Link>
                   </Button>

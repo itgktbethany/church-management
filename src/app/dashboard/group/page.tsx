@@ -35,6 +35,12 @@ export default async function GroupPage(props: PageProps) {
   const feedResponse = await getGroupFeed(group.id);
   const feedItems = feedResponse.data || [];
 
+  // Calculate today's activity metrics
+  const uniqueUsersCompleted = new Set(feedItems.map(item => item.user.id)).size;
+  const sharedCount = feedItems.filter(item => item.visibility !== "private").length;
+  const privateCount = feedItems.filter(item => item.visibility === "private").length;
+  const rate = members.length > 0 ? Math.round((uniqueUsersCompleted / members.length) * 100) : 0;
+
   return (
     <div className="container max-w-3xl mx-auto py-8 px-4">
       <div className="mb-6">
@@ -53,7 +59,12 @@ export default async function GroupPage(props: PageProps) {
           totalMembers={members.length}
         />
 
-        <GroupActivityCard />
+        <GroupActivityCard 
+          completed={uniqueUsersCompleted}
+          rate={rate}
+          shared={sharedCount}
+          privateCount={privateCount}
+        />
 
         {leader && (
           <GroupLeaderCard 
