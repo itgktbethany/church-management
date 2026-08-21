@@ -7,6 +7,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { AlertActions } from "./alert-actions";
+import { LocalTime } from "@/components/ui/local-time";
 
 export async function AlertTable() {
   const data = await getAlerts();
@@ -83,9 +84,7 @@ export async function AlertTable() {
 
                     <td className="p-5">
                       {alert.displayAt
-                        ? new Date(
-                            alert.displayAt
-                          ).toLocaleString()
+                        ? <LocalTime date={alert.displayAt} formatStr="MMM d, yyyy, h:mm a" />
                         : "-"}
                     </td>
 
@@ -177,9 +176,7 @@ export async function AlertTable() {
               <p className="text-xs text-muted-foreground">
                 Display At:{" "}
                 {alert.displayAt
-                  ? new Date(
-                      alert.displayAt
-                    ).toLocaleString()
+                  ? <LocalTime date={alert.displayAt} formatStr="MMM d, yyyy, h:mm a" />
                   : "-"}
               </p>
 

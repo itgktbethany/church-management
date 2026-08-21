@@ -38,14 +38,10 @@ export function DevotionalTabs({
 }: DevotionalTabsProps) {
   return (
     <Tabs
-      defaultValue="daily"
+      defaultValue="history"
       className="space-y-4"
     >
       <TabsList>
-        <TabsTrigger value="daily">
-          Daily
-        </TabsTrigger>
-
         <TabsTrigger value="history">
           History
         </TabsTrigger>
@@ -55,23 +51,7 @@ export function DevotionalTabs({
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="daily">
-        <Card>
-          <CardContent className="flex items-center gap-4 p-6">
-            <BookOpen className="h-10 w-10 text-primary" />
 
-            <div>
-              <h3 className="font-semibold">
-                Today's Reading
-              </h3>
-
-              <p className="text-sm text-muted-foreground">
-                Continue reading today's devotional.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
 
       <TabsContent value="history">
         <div className="grid gap-4 md:grid-cols-2">

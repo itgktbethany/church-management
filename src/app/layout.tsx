@@ -18,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GKT Bethany CHMS",
   description: "Church Management System for GKT Bethany",
+  icons: {
+    icon: "/gkt-logo.png",
+    apple: "/gkt-logo.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

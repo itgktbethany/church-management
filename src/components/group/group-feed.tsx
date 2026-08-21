@@ -64,7 +64,9 @@ export function GroupFeed({ feedItems }: GroupFeedProps) {
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium">{item.user.name}</p>
                       <span className="text-xs text-muted-foreground">
-                        <LocalTime date={item.createdAt} />
+                        <LocalTime 
+                          date={new Date(new Date(item.createdAt).getTime() - 8 * 60 * 60 * 1000)} 
+                        />
                       </span>
                     </div>
                     {!isPrivate && (

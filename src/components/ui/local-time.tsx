@@ -30,11 +30,5 @@ export function LocalTime({ date, formatStr = "h:mm a" }: { date: Date | string,
     }
   }
 
-  // The database (Postgres) is running in GMT+8, but the `pg` driver parses 
-  // the timestamp without timezone as UTC. This causes all dates to be 8 hours 
-  // ahead of true UTC. We subtract 8 hours here to restore the true UTC time.
-  const parsedDate = new Date(dateString);
-  const trueUtcDate = new Date(parsedDate.getTime() - (8 * 60 * 60 * 1000));
-
-  return <span>{format(trueUtcDate, formatStr)}</span>;
+  return <span>{format(new Date(dateString), formatStr)}</span>;
 }
