@@ -19,29 +19,58 @@ export function Topbar({ role }: TopbarProps) {
     const mainElement = document.getElementById("main-scroll-area");
     if (!mainElement) return;
 
-    const handleScroll = () => {
-      // Show on scroll
+    const checkIsScrollable = () => {
+      return mainElement.scrollHeight > mainElement.clientHeight;
+    };
+
+    const handleInteraction = () => {
       setIsVisible(true);
 
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
 
-      // Hide after 1.5s of inactivity
-      scrollTimeout.current = setTimeout(() => {
-        setIsVisible(false);
-      }, 1500);
+      if (checkIsScrollable()) {
+        scrollTimeout.current = setTimeout(() => {
+          setIsVisible(false);
+        }, 1500);
+      }
     };
 
-    mainElement.addEventListener("scroll", handleScroll);
+    mainElement.addEventListener("scroll", handleInteraction);
+    // Reveal on tap/click for better UX
+    mainElement.addEventListener("click", handleInteraction);
+    mainElement.addEventListener("touchstart", handleInteraction, { passive: true });
 
-    // Initial timeout to hide if not scrolled
-    scrollTimeout.current = setTimeout(() => {
-      setIsVisible(false);
-    }, 3000);
+    // Initial check
+    if (checkIsScrollable()) {
+      scrollTimeout.current = setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+    } else {
+      setIsVisible(true);
+    }
+
+    // Monitor for DOM/content size changes
+    const resizeObserver = new ResizeObserver(() => {
+      if (!checkIsScrollable()) {
+        setIsVisible(true);
+        if (scrollTimeout.current) {
+          clearTimeout(scrollTimeout.current);
+        }
+      }
+    });
+
+    resizeObserver.observe(mainElement);
+    if (mainElement.firstElementChild) {
+      resizeObserver.observe(mainElement.firstElementChild);
+    }
 
     return () => {
-      mainElement.removeEventListener("scroll", handleScroll);
+      mainElement.removeEventListener("scroll", handleInteraction);
+      mainElement.removeEventListener("click", handleInteraction);
+      mainElement.removeEventListener("touchstart", handleInteraction);
+      resizeObserver.disconnect();
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }

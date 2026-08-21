@@ -1,39 +1,43 @@
 "use client";
 
 import { getToken } from "firebase/messaging";
-import { messaging } from "./messaging";
+import { messagingPromise } from "./messaging";
 import { savePushToken } from "@/actions/push-token";
 
 export async function requestNotificationPermission() {
   try {
-    console.log("Requesting Permission")
-    const permission = await Notification.requestPermission();
+    const messaging = await messagingPromise;
 
-    console.log("Permission:", permission)
+    if (!messaging) {
+      console.log("Firebase Messaging is not supported on this browser.");
+      return null;
+    }
+
+    console.log("Requesting notification permission...");
+    const permission = await Notification.requestPermission();
+    console.log("Permission:", permission);
 
     if (permission !== "granted") {
       console.log("Notification permission denied");
       return null;
     }
 
-    if (!messaging) {
-      console.log("Messaging not initialized");
-      return null;
-    }
+    // Explicitly pass the service worker registration.
+    // This is required on iOS to ensure FCM uses the correct SW scope.
+    const swRegistration = await navigator.serviceWorker.getRegistration(
+      "/firebase-messaging-sw.js"
+    );
 
     console.log("Getting FCM token...");
-    console.log(
-  "VAPID:",
-  process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
-);
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
+      ...(swRegistration ? { serviceWorkerRegistration: swRegistration } : {}),
     });
 
     console.log("FCM Token:", token);
 
-    if (token){
-        await savePushToken(token);
+    if (token) {
+      await savePushToken(token);
     }
 
     return token;

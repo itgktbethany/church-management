@@ -23,10 +23,18 @@ export async function sendPushToAll(
     try {
       await adminMessaging.send({
         token: token.token,
+        // Top-level notification: required for iOS Web Push to deliver
+        notification: {
+          title,
+          body,
+        },
         webpush: {
           notification: {
             title,
             body,
+            // icon is required — iOS silently drops notifications without one
+            icon: "/icons/icon-192x192.png",
+            badge: "/icons/icon-192x192.png",
           },
         },
       });

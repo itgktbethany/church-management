@@ -27,6 +27,8 @@ messaging.onBackgroundMessage((payload) => {
     payload.notification?.title ?? "CHMS",
     {
       body: payload.notification?.body ?? "",
+      icon: "/icons/icon-192x192.png",
+      badge: "/icons/icon-192x192.png",
     }
   );
 });
