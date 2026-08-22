@@ -1,15 +1,26 @@
 import { adminMessaging } from "@/lib/firebase/admin";
 import { db } from "@/lib/db";
-import { alerts ,pushTokens } from "@/lib/db/schema";
+import { alerts, pushTokens, user } from "@/lib/db/schema";
 import { and, eq, isNotNull, isNull, lte } from "drizzle-orm";
 
 export async function sendPushToAll(
   title: string,
-  body: string
+  body: string,
+  targetType: string = "all"
 ) {
-  const tokens = await db.select().from(pushTokens);
+  // Build the query: join pushTokens → user so we can filter by role
+  const rows = await db
+    .select({ token: pushTokens.token, id: pushTokens.id })
+    .from(pushTokens)
+    .innerJoin(user, eq(pushTokens.userId, user.id))
+    // When targetType is "all" we include everyone; otherwise filter by role
+    .where(
+      targetType === "all"
+        ? undefined
+        : eq(user.role, targetType)
+    );
 
-  if (tokens.length === 0) {
+  if (rows.length === 0) {
     return {
       success: 0,
       failed: 0,
@@ -19,15 +30,16 @@ export async function sendPushToAll(
   let success = 0;
   let failed = 0;
 
-  for (const token of tokens) {
+  for (const row of rows) {
     try {
       await adminMessaging.send({
-        token: token.token,
-        // Top-level notification: required for iOS Web Push to deliver
-        notification: {
-          title,
-          body,
-        },
+        token: row.token,
+        // NOTE: No top-level `notification` key here.
+        // Passing it would cause FCM to auto-display a notification on
+        // Chrome/Android, which then collides with the SW's own showNotification()
+        // call and produces duplicate notifications.
+        // The SW's onBackgroundMessage / push handlers are solely responsible
+        // for rendering the notification.
         webpush: {
           notification: {
             title,
@@ -42,7 +54,7 @@ export async function sendPushToAll(
       success++;
     } catch (error) {
       console.error(
-        `Failed to send notification to token ${token.id}`,
+        `Failed to send notification to token ${row.id}`,
         error
       );
 
@@ -59,10 +71,12 @@ export async function sendPushToAll(
 export async function sendAlertNotification(alert: {
   title: string;
   message: string;
+  targetType?: string;
 }) {
   return sendPushToAll(
     alert.title,
-    alert.message
+    alert.message,
+    alert.targetType ?? "all"
   );
 }
 
@@ -92,6 +106,7 @@ export async function processPendingAlerts() {
     const result = await sendAlertNotification({
       title: alert.title,
       message: alert.message,
+      targetType: alert.targetType,
     });
 
     if (result.success > 0){

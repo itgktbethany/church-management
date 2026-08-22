@@ -11,11 +11,10 @@ export async function sendWelcomeNotification(token: string) {
   try {
     await adminMessaging.send({
       token,
-      // Top-level notification: required for iOS Web Push
-      notification: {
-        title: "Welcome to FaithFlow 🎉",
-        body: "You're all set! You'll now receive updates about devotionals and your groups.",
-      },
+      // NOTE: No top-level `notification` key.
+      // Omitting it prevents FCM from auto-displaying a notification on
+      // Chrome/Android, which would duplicate what the SW's push handler shows.
+      // The SW (firebase-messaging-sw.js) handles display for all platforms.
       webpush: {
         notification: {
           title: "Welcome to FaithFlow 🎉",
