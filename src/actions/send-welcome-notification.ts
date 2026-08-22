@@ -20,7 +20,9 @@ export async function sendWelcomeNotification(token: string) {
         notification: {
           title: "Welcome to FaithFlow 🎉",
           body: "You're all set! You'll now receive updates about devotionals and your groups.",
-          icon: "/icons/icon-192x192.png",
+          // Use the same icon as sendPushToAll — iOS silently drops pushes
+          // when the icon path is invalid or the image is too small.
+          icon: "/gkt-logo.png",
           badge: "/icons/icon-192x192.png",
         },
       },

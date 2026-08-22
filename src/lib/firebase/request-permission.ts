@@ -22,11 +22,13 @@ export async function requestNotificationPermission() {
       return null;
     }
 
-    // Wait for the service worker to be fully active before getting token.
-    // navigator.serviceWorker.ready resolves only when the SW is installed & active,
-    // preventing a race condition where the SW was registered but not yet controlling
-    // the page when getToken() is called (especially relevant on iOS first-load).
-    const swRegistration = await navigator.serviceWorker.ready;
+    // Explicitly fetch the Firebase SW registration instead of using
+    // navigator.serviceWorker.ready, which resolves to whichever SW is
+    // currently active (could be the PWA's sw.js). Binding getToken() to the
+    // wrong SW produces a valid-looking token that never delivers messages.
+    const swRegistration =
+      (await navigator.serviceWorker.getRegistration("/firebase-messaging-sw.js")) ??
+      (await navigator.serviceWorker.ready);
 
     console.log("Getting FCM token...");
     const token = await getToken(messaging, {
