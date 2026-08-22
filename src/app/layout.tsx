@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { FirebaseServiceWorkerRegistrar } from "@/components/firebase-service-worker-registrar";
 import { FirebaseForegroundHandler } from "@/components/firebase-foreground-handler";
-import { PwaUpdatePrompt } from "@/components/pwa-update-prompt";
 
 export const viewport: Viewport = {
   // Required for env(safe-area-inset-*) to work on iPhone
@@ -53,8 +52,6 @@ export default function RootLayout({
         {/* Registers firebase-messaging-sw.js on all platforms, required for iOS */}
         <FirebaseServiceWorkerRegistrar />
         <FirebaseForegroundHandler />
-        {/* Shows a reload prompt when a new PWA version is deployed */}
-        <PwaUpdatePrompt />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

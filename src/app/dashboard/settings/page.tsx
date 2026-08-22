@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { NotificationSettings } from "@/components/settings/notification-settings";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
+import { PwaUpdatePrompt } from "@/components/pwa-update-prompt";
 import { User, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -61,8 +62,11 @@ export default async function SettingsPage() {
             <CardContent className="p-4 sm:p-6 border-b">
               <NotificationSettings />
             </CardContent>
-            <CardContent className="p-4 sm:p-6 bg-muted/30">
+            <CardContent className="p-4 sm:p-6 border-b bg-muted/30">
               <ThemeToggle />
+            </CardContent>
+            <CardContent className="p-4 sm:p-6 bg-muted/30">
+              <PwaUpdatePrompt />
             </CardContent>
           </Card>
         </section>
