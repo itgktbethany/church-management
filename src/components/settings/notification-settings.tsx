@@ -13,15 +13,33 @@ export function NotificationSettings() {
   const handleEnable = async () => {
     setLoadingEnable(true);
     try {
+      if (!("Notification" in window)) {
+        toast.error("Notifications are not supported on this browser.");
+        return;
+      }
+
+      // iOS Safari CRITICAL: Notification.requestPermission() MUST be called
+      // as the very first await in a direct user gesture handler. Any prior
+      // async operation (including await messagingPromise) breaks iOS's gesture
+      // chain — the permission prompt will never appear or will be silently
+      // denied. This is the #1 reason push notifications fail on iOS PWAs.
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        toast.error("Permission denied. Please allow notifications in Safari settings.");
+        return;
+      }
+
+      // Permission is already granted — requestNotificationPermission will skip
+      // the requestPermission call and proceed directly to getToken.
       const token = await requestNotificationPermission();
       if (token) {
-        // Send a welcome notification to this user only
         await sendWelcomeNotification(token);
         toast.success("Notifications enabled successfully");
       } else {
-        toast.error("Permission denied or failed to get token");
+        toast.error("Failed to get notification token. Please try again.");
       }
     } catch (error) {
+      console.error("Failed to enable notifications:", error);
       toast.error("Failed to enable notifications");
     } finally {
       setLoadingEnable(false);

@@ -13,12 +13,14 @@ export async function requestNotificationPermission() {
       return null;
     }
 
-    console.log("Requesting notification permission...");
-    const permission = await Notification.requestPermission();
-    console.log("Permission:", permission);
-
-    if (permission !== "granted") {
-      console.log("Notification permission denied");
+    // Notification.requestPermission() is intentionally NOT called here.
+    // On iOS Safari, it MUST be the first await in the direct user gesture
+    // handler (NotificationSettings.handleEnable). Calling it here — after
+    // `await messagingPromise` — would break the iOS gesture chain and cause
+    // the permission prompt to be silently blocked.
+    // The caller is responsible for requesting permission before invoking this.
+    if (Notification.permission !== "granted") {
+      console.log("Notification permission not granted.");
       return null;
     }
 

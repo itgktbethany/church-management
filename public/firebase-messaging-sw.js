@@ -17,10 +17,31 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Firebase's built-in SDK automatically handles incoming push events 
-// and displays the notification if the payload contains a "notification" object.
-// Custom handlers (onBackgroundMessage or manual 'push' listeners) will cause
-// duplicate notifications to appear.
+// Explicit background message handler — required for iOS Safari PWA.
+//
+// iOS aggressively terminates service workers. Firebase compat's automatic
+// notification display (triggered when the payload contains a "notification"
+// object) is NOT guaranteed to survive iOS's strict SW lifecycle cutoff.
+//
+// Using onBackgroundMessage() ensures the notification is shown via
+// event.waitUntil() internally by the Firebase compat library, which keeps
+// the service worker alive long enough for iOS to render the notification.
+//
+// NOTE: Defining onBackgroundMessage disables the automatic display — we are
+// fully responsible for calling self.registration.showNotification() here.
+messaging.onBackgroundMessage((payload) => {
+  console.log("[SW] Background message received:", payload);
+
+  const notification = payload.notification ?? {};
+  const title = notification.title || "GKT Bethany CHMS";
+  const options = {
+    body: notification.body || "",
+    icon: "/gkt-logo.png",
+    badge: "/gkt-logo.png",
+  };
+
+  return self.registration.showNotification(title, options);
+});
 
 self.addEventListener("install", () => {
   self.skipWaiting();
