@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -54,8 +54,12 @@ export function DevotionalReflectionForm({
   const [loading, setLoading] =
     useState(false);
 
+  const isSubmitting = useRef(false);
+
   const handleSubmit =
     async () => {
+      if (isSubmitting.current) return;
+      
       if (!content.trim()) {
         toast.error(
           "Reflection cannot be empty"
@@ -65,6 +69,7 @@ export function DevotionalReflectionForm({
       }
 
       try {
+        isSubmitting.current = true;
         setLoading(true);
 
         await saveReflection(
@@ -84,6 +89,7 @@ export function DevotionalReflectionForm({
         );
       } finally {
         setLoading(false);
+        isSubmitting.current = false;
       }
     };
 

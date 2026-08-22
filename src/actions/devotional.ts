@@ -91,64 +91,66 @@ export async function saveReflection(
     throw new Error("User not found");
   }
 
-  const [existing] = await db
-    .select()
-    .from(devotionalComments)
-    .where(
-      and(
-        eq(devotionalComments.devotionalId, devotionalId),
-        eq(devotionalComments.userId, session.user.id)
-      )
-    );
+  await db.transaction(async (tx) => {
+    const [existing] = await tx
+      .select()
+      .from(devotionalComments)
+      .where(
+        and(
+          eq(devotionalComments.devotionalId, devotionalId),
+          eq(devotionalComments.userId, session.user.id)
+        )
+      );
 
-  if (existing) {
-    await db
-      .update(devotionalComments)
-      .set({ comment, visibility })
-      .where(eq(devotionalComments.id, existing.id));
-  } else {
-    await db
-      .insert(devotionalComments)
-      .values({
-        devotionalId,
+    if (existing) {
+      await tx
+        .update(devotionalComments)
+        .set({ comment, visibility })
+        .where(eq(devotionalComments.id, existing.id));
+    } else {
+      await tx
+        .insert(devotionalComments)
+        .values({
+          devotionalId,
+          userId: session.user.id,
+          comment,
+          visibility,
+        });
+
+      await tx.insert(devotionalCompletions).values({
         userId: session.user.id,
-        comment,
-        visibility,
+        devotionalId,
       });
 
-    await db.insert(devotionalCompletions).values({
-      userId: session.user.id,
-      devotionalId,
-    });
+      let event = await tx.query.events.findFirst({
+        where: eq(events.name, "Devotional Completion"),
+      });
 
-    let event = await db.query.events.findFirst({
-      where: eq(events.name, "Devotional Completion"),
-    });
+      if (!event) {
+        const [newEvent] = await tx
+          .insert(events)
+          .values({
+            name: "Devotional Completion",
+            type: "add",
+            defaultPoints: 10,
+          })
+          .returning();
+        event = newEvent;
+      }
 
-    if (!event) {
-      const [newEvent] = await db
-        .insert(events)
-        .values({
-          name: "Devotional Completion",
-          type: "add",
-          defaultPoints: 10,
-        })
-        .returning();
-      event = newEvent;
+      await tx.insert(pointTransactions).values({
+        userId: session.user.id,
+        eventId: event.id,
+        type: "add",
+        amount: 10,
+      });
+
+      await tx
+        .update(user)
+        .set({ points: sql`${user.points} + 10` })
+        .where(eq(user.id, session.user.id));
     }
-
-    await db.insert(pointTransactions).values({
-      userId: session.user.id,
-      eventId: event.id,
-      type: "add",
-      amount: 10,
-    });
-
-    await db
-      .update(user)
-      .set({ points: sql`${user.points} + 10` })
-      .where(eq(user.id, session.user.id));
-  }
+  });
 
   return {
     success: true,
