@@ -17,30 +17,52 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Explicit background message handler — required for iOS Safari PWA.
-//
-// iOS aggressively terminates service workers. Firebase compat's automatic
-// notification display (triggered when the payload contains a "notification"
-// object) is NOT guaranteed to survive iOS's strict SW lifecycle cutoff.
-//
-// Using onBackgroundMessage() ensures the notification is shown via
-// event.waitUntil() internally by the Firebase compat library, which keeps
-// the service worker alive long enough for iOS to render the notification.
-//
-// NOTE: Defining onBackgroundMessage disables the automatic display — we are
-// fully responsible for calling self.registration.showNotification() here.
+// Firebase's handler — fires on Android/Chrome in the background
 messaging.onBackgroundMessage((payload) => {
-  console.log("[SW] Background message received:", payload);
+  console.log(
+    "[firebase-messaging-sw.js] Background message (Firebase)",
+    payload
+  );
 
-  const notification = payload.notification ?? {};
-  const title = notification.title || "GKT Bethany CHMS";
-  const options = {
-    body: notification.body || "",
-    icon: "/gkt-logo.png",
-    badge: "/gkt-logo.png",
-  };
+  self.registration.showNotification(
+    payload.notification?.title ?? "CHMS",
+    {
+      body: payload.notification?.body ?? "",
+      icon: "/gkt-logo.png",
+      badge: "/gkt-logo.png",
+    }
+  );
+});
 
-  return self.registration.showNotification(title, options);
+// Native push event handler — required for iOS Safari Web Push.
+// Apple's WebKit fires the standard 'push' event and does NOT reliably
+// trigger Firebase's onBackgroundMessage wrapper, so we must handle it here.
+self.addEventListener("push", function (event) {
+  // If Firebase already handled this (Android/Chrome), skip
+  if (!event.data) return;
+
+  let title = "CHMS";
+  let body = "";
+
+  try {
+    const data = event.data.json();
+    // FCM wraps the payload under notification or data keys
+    title = data.notification?.title ?? data.data?.title ?? "CHMS";
+    body = data.notification?.body ?? data.data?.body ?? "";
+  } catch (e) {
+    // Fallback for plain-text payloads
+    body = event.data.text();
+  }
+
+  // event.waitUntil is MANDATORY on iOS — Safari requires showNotification
+  // to be called synchronously within the push event handler
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: "/gkt-logo.png",
+      badge: "/gkt-logo.png",
+    })
+  );
 });
 
 self.addEventListener("install", () => {
