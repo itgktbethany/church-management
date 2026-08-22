@@ -11,6 +11,7 @@ const withPWA = withPWAInit({
   workboxOptions: {
     skipWaiting: true,
     clientsClaim: true,
+    importScripts: ['/firebase-messaging-sw.js'],
   },
 });
 
