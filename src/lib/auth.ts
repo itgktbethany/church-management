@@ -25,5 +25,11 @@ export const auth = betterAuth({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         },
+    },
+
+    advanced: {
+        defaultCookieAttributes: {
+            maxAge: 60 * 60 * 24 * 10, // Force persistence on all cookies, including session_token
+        },
     }
 })
