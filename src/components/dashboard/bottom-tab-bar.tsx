@@ -30,24 +30,24 @@ import { cn } from "@/lib/utils";
 import { LogoutButton } from "./logout-button";
 
 const mainTabs = [
-  { title: "Home",        href: "/dashboard",             icon: LayoutDashboard },
+  { title: "Home", href: "/dashboard", icon: LayoutDashboard },
   { title: "Devotionals", href: "/dashboard/devotionals", icon: BookOpen },
-  { title: "Groups",      href: "/dashboard/group",       icon: Users },
-  { title: "Profile",     href: "/dashboard/profile",     icon: UserCircle2 },
+  { title: "Groups", href: "/dashboard/group", icon: Users },
+  { title: "My Points", href: "/dashboard/points", icon: Coins },
 ];
 
 const moreItems = [
-  { title: "Settings",  href: "/dashboard/settings", icon: Settings },
-  { title: "My Points", href: "/dashboard/points",   icon: Coins },
+  { title: "Settings", href: "/dashboard/settings", icon: Settings },
+  { title: "Profile", href: "/dashboard/profile", icon: UserCircle2 },
 ];
 
 const adminItems = [
   { title: "Devotional Mgmt", href: "/dashboard/admin/devotionals", icon: Shield },
-  { title: "Alert Mgmt",      href: "/dashboard/admin/alerts",      icon: AlarmClock },
-  { title: "Group Mgmt",      href: "/dashboard/admin/groups",      icon: Users },
-  { title: "Ministries",      href: "/dashboard/admin/ministries",  icon: BookOpen },
-  { title: "Events",          href: "/dashboard/admin/events",      icon: Ticket },
-  { title: "Points Mgmt",     href: "/dashboard/admin/points",      icon: Coins },
+  { title: "Alert Mgmt", href: "/dashboard/admin/alerts", icon: AlarmClock },
+  { title: "Group Mgmt", href: "/dashboard/admin/groups", icon: Users },
+  { title: "Ministries", href: "/dashboard/admin/ministries", icon: BookOpen },
+  { title: "Events", href: "/dashboard/admin/events", icon: Ticket },
+  { title: "Points Mgmt", href: "/dashboard/admin/points", icon: Coins },
 ];
 
 type BottomTabBarProps = { role: string };

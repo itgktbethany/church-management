@@ -35,10 +35,11 @@ type DevotionalTabsProps = {
 export function DevotionalTabs({
   devotionals,
   reflections,
-}: DevotionalTabsProps) {
+  defaultTab = "history",
+}: DevotionalTabsProps & { defaultTab?: string }) {
   return (
     <Tabs
-      defaultValue="history"
+      defaultValue={defaultTab}
       className="space-y-4"
     >
       <TabsList>

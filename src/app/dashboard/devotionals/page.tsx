@@ -9,7 +9,9 @@ import { devotionalComments, devotionals } from "@/lib/db/schema";
 
 import { desc,eq } from "drizzle-orm";
 
-export default async function DevotionalPage() {
+export default async function DevotionalPage(props: { searchParams: Promise<{ tab?: string }> }) {
+  const searchParams = await props.searchParams;
+  const tab = searchParams?.tab || "history";
 
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -82,6 +84,7 @@ const latestDevotional = devotionalToday[0];
       <DevotionalTabs
         devotionals={devotionalData}
         reflections={reflectionsData}
+        defaultTab={tab}
       />
     </div>
   );

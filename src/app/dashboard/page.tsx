@@ -17,39 +17,6 @@ import { Badge } from "@/components/ui/badge";
 import { getDashboardData } from "@/actions/dashboard";
 import { redirect } from "next/navigation";
 
-const smartButtons = [
-  {
-    title: "Read Devotional",
-    icon: BookOpen,
-    href: "/dashboard/devotionals",
-  },
-  {
-    title: "Write Reflection",
-    icon: PenSquare,
-    href: "/dashboard/reflections",
-  },
-  {
-    title: "My Group",
-    icon: Users,
-    href: "/dashboard/groups",
-  },
-  {
-    title: "My Progress",
-    icon: Target,
-    href: "/dashboard/progress",
-  },
-  {
-    title: "Notifications",
-    icon: Bell,
-    href: "/dashboard/notifications",
-  },
-  {
-    title: "Profile",
-    icon: User,
-    href: "/dashboard/profile",
-  },
-];
-
 export default async function DashboardPage() {
   const data = await getDashboardData();
 
@@ -146,79 +113,48 @@ export default async function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="rounded-2xl border-white/10 bg-white/10 text-white backdrop-blur">
-                  <CardContent className="flex flex-col gap-2 p-4">
-                    <div className="flex items-center gap-2 text-sm text-zinc-300">
-                      <Star className="h-4 w-4" />
-                      Total Points
-                    </div>
+                <Link href="/dashboard/points" className="block transition-transform hover:scale-105 active:scale-95">
+                  <Card className="rounded-2xl border-white/10 bg-white/10 text-white backdrop-blur hover:bg-white/20 transition-colors h-full">
+                    <CardContent className="flex flex-col gap-2 p-4">
+                      <div className="flex items-center gap-2 text-sm text-zinc-300">
+                        <Star className="h-4 w-4" />
+                        Total Points
+                      </div>
 
-                    <p className="text-3xl font-bold">{stats.totalPoints}</p>
-                  </CardContent>
-                </Card>
+                      <p className="text-3xl font-bold">{stats.totalPoints}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
 
-                <Card className="rounded-2xl border-white/10 bg-white/10 text-white backdrop-blur">
-                  <CardContent className="flex flex-col gap-2 p-4">
-                    <div className="flex items-center gap-2 text-sm text-zinc-300">
-                      <BookOpen className="h-4 w-4" />
-                      Devotionals
-                    </div>
+                <Link href="/dashboard/devotionals" className="block transition-transform hover:scale-105 active:scale-95">
+                  <Card className="rounded-2xl border-white/10 bg-white/10 text-white backdrop-blur hover:bg-white/20 transition-colors h-full">
+                    <CardContent className="flex flex-col gap-2 p-4">
+                      <div className="flex items-center gap-2 text-sm text-zinc-300">
+                        <BookOpen className="h-4 w-4" />
+                        Devotionals
+                      </div>
 
-                    <p className="text-3xl font-bold">{stats.devotionals}</p>
-                  </CardContent>
-                </Card>
+                      <p className="text-3xl font-bold">{stats.devotionals}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
 
-                <Card className="rounded-2xl border-white/10 bg-white/10 text-white backdrop-blur">
-                  <CardContent className="flex flex-col gap-2 p-4">
-                    <div className="flex items-center gap-2 text-sm text-zinc-300">
-                      <PenSquare className="h-4 w-4" />
-                      Reflections
-                    </div>
+                <Link href="/dashboard/devotionals?tab=notes" className="block transition-transform hover:scale-105 active:scale-95">
+                  <Card className="rounded-2xl border-white/10 bg-white/10 text-white backdrop-blur hover:bg-white/20 transition-colors h-full">
+                    <CardContent className="flex flex-col gap-2 p-4">
+                      <div className="flex items-center gap-2 text-sm text-zinc-300">
+                        <PenSquare className="h-4 w-4" />
+                        Reflections
+                      </div>
 
-                    <p className="text-3xl font-bold">{stats.reflections}</p>
-                  </CardContent>
-                </Card>
+                      <p className="text-3xl font-bold">{stats.reflections}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </div>
             </div>
           </CardContent>
         </Card>
-      </section>
-
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold">Smart Actions</h2>
-            <p className="text-sm text-muted-foreground">
-              Quick access to your daily spiritual activities.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-          {smartButtons.map((button) => {
-            const Icon = button.icon;
-
-            return (
-              <Link key={button.title} href={button.href}>
-                <Card className="group rounded-3xl transition-all hover:-translate-y-1 hover:shadow-lg">
-                  <CardContent className="flex flex-col items-start gap-4 p-5">
-                    <div className="rounded-2xl bg-zinc-100 p-3 dark:bg-zinc-800">
-                      <Icon className="h-5 w-5" />
-                    </div>
-
-                    <div className="flex w-full items-center justify-between gap-2">
-                      <p className="text-sm font-medium leading-snug">
-                        {button.title}
-                      </p>
-
-                      <ChevronRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
