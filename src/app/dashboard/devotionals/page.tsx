@@ -31,6 +31,7 @@ const reflectionsData =
           comment: devotionalComments.comment,
           createdAt: devotionalComments.createdAt,
           devotionalTitle: devotionals.title,
+          devotionalId: devotionals.id,
         })
         .from(devotionalComments)
         .leftJoin(

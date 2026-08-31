@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
 import {
@@ -29,6 +30,7 @@ type DevotionalTabsProps = {
     comment: string;
     createdAt: Date;
     devotionalTitle: string | null;
+    devotionalId: string | null;
   }[];
 };
 
@@ -77,10 +79,15 @@ export function DevotionalTabs({
             </Card>
           ) : (
             reflections.map((reflection) => (
-              <DevotionalNoteCard
+              <Link
                 key={reflection.id}
-                reflection={reflection}
-              />
+                href={reflection.devotionalId ? `/dashboard/devotionals/${reflection.devotionalId}?tab=notes` : "#"}
+                className="block transition-transform hover:-translate-y-1"
+              >
+                <DevotionalNoteCard
+                  reflection={reflection}
+                />
+              </Link>
             ))
           )}
         </div>
