@@ -9,6 +9,7 @@ import { BellRing } from "lucide-react";
 
 export function NotificationSettings() {
   const [loadingEnable, setLoadingEnable] = useState(false);
+  const [enabled, setEnabled] = useState(false);
 
   const handleEnable = async () => {
     setLoadingEnable(true);
@@ -35,6 +36,7 @@ export function NotificationSettings() {
       if (token) {
         await sendWelcomeNotification(token);
         toast.success("Notifications enabled successfully");
+        setEnabled(true);
       } else {
         toast.error("Failed to get notification token. Please try again.");
       }
@@ -58,11 +60,11 @@ export function NotificationSettings() {
 
         <Button
           onClick={handleEnable}
-          disabled={loadingEnable}
+          disabled={loadingEnable || enabled}
           className="w-full sm:w-auto"
         >
           <BellRing className="w-4 h-4 mr-2" />
-          {loadingEnable ? "Enabling..." : "Enable"}
+          {loadingEnable ? "Enabling..." : enabled ? "Enabled" : "Enable"}
         </Button>
       </div>
     </div>
