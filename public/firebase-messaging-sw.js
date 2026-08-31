@@ -17,28 +17,25 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Firebase's handler — fires on Android/Chrome in the background
+// Firebase's handler — fires on Android/Chrome in the background for data-only payloads
 messaging.onBackgroundMessage((payload) => {
   console.log(
     "[firebase-messaging-sw.js] Background message (Firebase)",
     payload
   );
-
-  self.registration.showNotification(
-    payload.notification?.title ?? "CHMS",
-    {
-      body: payload.notification?.body ?? "",
-      icon: "/gkt-logo.png",
-      badge: "/gkt-logo.png",
-    }
-  );
+  // Do NOT call showNotification here if the payload contains 'notification'
+  // because FCM SDK automatically displays it.
 });
 
 // Native push event handler — required for iOS Safari Web Push.
-// Apple's WebKit fires the standard 'push' event and does NOT reliably
-// trigger Firebase's onBackgroundMessage wrapper, so we must handle it here.
+// Apple's WebKit requires showNotification to be called synchronously within
+// the push event handler. Firebase SDK does not do this reliably.
 self.addEventListener("push", function (event) {
-  // If Firebase already handled this (Android/Chrome), skip
+  // Only manually handle the push event on Apple devices where FCM's built-in 
+  // background display is unreliable. On Android/Windows/Chrome, FCM handles it automatically.
+  const isApple = /Mac|iPod|iPhone|iPad/.test(navigator.userAgent);
+  if (!isApple) return;
+
   if (!event.data) return;
 
   let title = "CHMS";
@@ -46,16 +43,12 @@ self.addEventListener("push", function (event) {
 
   try {
     const data = event.data.json();
-    // FCM wraps the payload under notification or data keys
     title = data.notification?.title ?? data.data?.title ?? "CHMS";
     body = data.notification?.body ?? data.data?.body ?? "";
   } catch (e) {
-    // Fallback for plain-text payloads
     body = event.data.text();
   }
 
-  // event.waitUntil is MANDATORY on iOS — Safari requires showNotification
-  // to be called synchronously within the push event handler
   event.waitUntil(
     self.registration.showNotification(title, {
       body,

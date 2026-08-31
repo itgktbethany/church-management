@@ -22,17 +22,21 @@ export function FirebaseForegroundHandler() {
         // is foregrounded. Without this, Android only shows an in-app toast and
         // iOS shows nothing at all when the page is active.
         if ("serviceWorker" in navigator) {
-          try {
-            const registration = await navigator.serviceWorker.ready;
-            await registration.showNotification(notification.title ?? "", {
-              body: notification.body,
-              icon: "/gkt-logo.png",
-              badge: "/gkt-logo.png",
-            });
-          } catch (err) {
-            // Fallback: SW showNotification failed (e.g. permission not granted yet),
-            // the toast below will still surface the message in-app.
-            console.warn("SW showNotification failed, falling back to toast:", err);
+          const isApple = /Mac|iPod|iPhone|iPad/.test(navigator.userAgent);
+          
+          if (!isApple) {
+            try {
+              const registration = await navigator.serviceWorker.ready;
+              await registration.showNotification(notification.title ?? "", {
+                body: notification.body,
+                icon: "/gkt-logo.png",
+                badge: "/gkt-logo.png",
+              });
+            } catch (err) {
+              // Fallback: SW showNotification failed (e.g. permission not granted yet),
+              // the toast below will still surface the message in-app.
+              console.warn("SW showNotification failed, falling back to toast:", err);
+            }
           }
         }
 

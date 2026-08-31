@@ -103,20 +103,27 @@ export async function processPendingAlerts() {
   }
 
   for (const alert of pendingAlerts) {
-    const result = await sendAlertNotification({
+    const [updated] = await db
+      .update(alerts)
+      .set({ publishedAt: new Date() })
+      .where(
+        and(
+          eq(alerts.id, alert.id),
+          isNull(alerts.publishedAt)
+        )
+      )
+      .returning();
+
+    if (!updated) {
+      continue; // Another process already claimed this alert
+    }
+
+    await sendAlertNotification({
       title: alert.title,
       message: alert.message,
       targetType: alert.targetType,
     });
 
-    if (result.success > 0){
-    await db
-      .update(alerts)
-      .set({
-        publishedAt: new Date(),
-      })
-      .where(eq(alerts.id, alert.id));
-    }
     processed++;
   }
 
