@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { FontSizeProvider } from "@/components/font-size-provider";
 import { FirebaseServiceWorkerRegistrar } from "@/components/firebase-service-worker-registrar";
 import { FirebaseForegroundHandler } from "@/components/firebase-foreground-handler";
 
@@ -48,19 +49,37 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const size = localStorage.getItem('app-font-size');
+                if (size === 'large') {
+                  document.documentElement.style.fontSize = '112.5%';
+                } else if (size === 'xlarge') {
+                  document.documentElement.style.fontSize = '125%';
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         {/* Registers firebase-messaging-sw.js on all platforms, required for iOS */}
         <FirebaseServiceWorkerRegistrar />
         <FirebaseForegroundHandler />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster richColors/>
-        </ThemeProvider>
+        <FontSizeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster richColors/>
+          </ThemeProvider>
+        </FontSizeProvider>
       </body>
     </html>
   );
