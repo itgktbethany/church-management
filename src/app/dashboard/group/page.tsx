@@ -66,6 +66,8 @@ export default async function GroupPage(props: PageProps) {
           privateCount={privateCount}
         />
 
+        <GroupFeed feedItems={feedItems} />
+
         {leader && (
           <GroupLeaderCard 
             leader={leader} 
@@ -78,8 +80,6 @@ export default async function GroupPage(props: PageProps) {
           members={members}
           leaderId={group.leaderId}
         />
-
-        <GroupFeed feedItems={feedItems} />
       </div>
     </div>
   );

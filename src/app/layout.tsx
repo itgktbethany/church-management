@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { FontSizeProvider } from "@/components/font-size-provider";
 import { FirebaseServiceWorkerRegistrar } from "@/components/firebase-service-worker-registrar";
 import { FirebaseForegroundHandler } from "@/components/firebase-foreground-handler";
+import Script from "next/script";
 
 export const viewport: Viewport = {
   // Required for env(safe-area-inset-*) to work on iPhone
@@ -50,11 +51,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        <script
+        {/* Runs before hydration to prevent font-size flash */}
+        <Script
+          id="font-size-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                const size = localStorage.getItem('app-font-size');
+                var size = localStorage.getItem('app-font-size');
                 if (size === 'large') {
                   document.documentElement.style.fontSize = '112.5%';
                 } else if (size === 'xlarge') {
