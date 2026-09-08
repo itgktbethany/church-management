@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { requestNotificationPermission } from "@/lib/firebase/request-permission";
 import { sendWelcomeNotification } from "@/actions/send-welcome-notification";
@@ -10,6 +10,14 @@ import { BellRing } from "lucide-react";
 export function NotificationSettings() {
   const [loadingEnable, setLoadingEnable] = useState(false);
   const [enabled, setEnabled] = useState(false);
+
+  // Initialise from the real browser permission on mount so the button
+  // does not reset to "Enable" every time the settings page is opened.
+  useEffect(() => {
+    if (typeof window !== "undefined" && "Notification" in window) {
+      setEnabled(Notification.permission === "granted");
+    }
+  }, []);
 
   const handleEnable = async () => {
     setLoadingEnable(true);
