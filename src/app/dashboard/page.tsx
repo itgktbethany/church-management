@@ -34,7 +34,7 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <section className="flex flex-col gap-2">
         <Badge className="w-fit rounded-full px-4 py-1">
-          FaithFlow Dashboard
+          myMSK Dashboard
         </Badge>
 
         <div>
@@ -76,7 +76,7 @@ export default async function DashboardPage() {
                 ) : (
                   <div>
                     <h2 className="text-2xl font-bold md:text-4xl">
-                      No Devotional Today
+                      No Devotions Today
                     </h2>
                     <p className="mt-2 text-zinc-300">
                       Check back later for today's reading.
@@ -131,7 +131,7 @@ export default async function DashboardPage() {
                     <CardContent className="flex flex-col gap-2 p-4">
                       <div className="flex items-center gap-2 text-sm text-zinc-300">
                         <BookOpen className="h-4 w-4" />
-                        Devotionals
+                        Devotions
                       </div>
 
                       <p className="text-3xl font-bold">{stats.devotionals}</p>
@@ -171,7 +171,7 @@ export default async function DashboardPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between rounded-2xl border p-4">
                 <div>
-                  <p className="font-medium">Read devotional</p>
+                  <p className="font-medium">Read devotion</p>
                   <p className="text-sm text-muted-foreground">
                     {todayDevotional ? "Daily devotional available" : "No devotional today"}
                   </p>

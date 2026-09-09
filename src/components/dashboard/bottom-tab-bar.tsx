@@ -38,7 +38,6 @@ const mainTabs = [
 
 const moreItems = [
   { title: "Settings", href: "/dashboard/settings", icon: Settings },
-  { title: "Profile", href: "/dashboard/profile", icon: UserCircle2 },
 ];
 
 const adminItems = [

@@ -90,7 +90,7 @@ export function Topbar({ role }: TopbarProps) {
 
         <div>
           <h2 className="text-lg font-semibold ">
-            MY MSK
+            myMSK
           </h2>
         </div>
       </div>
