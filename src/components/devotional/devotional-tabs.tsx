@@ -1,18 +1,17 @@
-import Link from "next/link";
-import { BookOpen } from "lucide-react";
+"use client";
 
+import Link from "next/link";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-
 import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-
+import { useLanguage } from "@/components/language-provider";
 import { DevotionalHistoryCard } from "./devotional-history-card";
 import { DevotionalNoteCard } from "./devotional-note-card";
 
@@ -39,6 +38,8 @@ export function DevotionalTabs({
   reflections,
   defaultTab = "history",
 }: DevotionalTabsProps & { defaultTab?: string }) {
+  const { t } = useLanguage();
+
   return (
     <Tabs
       defaultValue={defaultTab}
@@ -46,24 +47,32 @@ export function DevotionalTabs({
     >
       <TabsList>
         <TabsTrigger value="history">
-          History
+          {t("devotionals.historyTab")}
         </TabsTrigger>
 
         <TabsTrigger value="notes">
-          Reflection
+          {t("devotionals.reflectionTab")}
         </TabsTrigger>
       </TabsList>
 
-
-
       <TabsContent value="history">
         <div className="grid gap-4 md:grid-cols-2">
-          {devotionals.map((devotional) => (
-            <DevotionalHistoryCard
-              key={devotional.id}
-              devotional={devotional}
-            />
-          ))}
+          {devotionals.length === 0 ? (
+            <Card className="col-span-full">
+              <CardContent className="p-6">
+                <p className="text-sm text-muted-foreground">
+                  {t("devotionals.noDevotions")}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            devotionals.map((devotional) => (
+              <DevotionalHistoryCard
+                key={devotional.id}
+                devotional={devotional}
+              />
+            ))
+          )}
         </div>
       </TabsContent>
 
@@ -73,7 +82,7 @@ export function DevotionalTabs({
             <Card>
               <CardContent className="p-6">
                 <p className="text-sm text-muted-foreground">
-                  No reflections yet.
+                  {t("devotionals.noReflections")}
                 </p>
               </CardContent>
             </Card>

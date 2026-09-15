@@ -1,23 +1,24 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useLanguage } from "@/components/language-provider";
+import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
       <div className="space-y-1">
-        <p className="font-medium">Appearance</p>
+        <p className="font-medium">{t("settings.appearance")}</p>
         <p className="text-sm text-muted-foreground">
-          Customize how FaithFlow looks on your device.
+          {t("settings.appearanceSub")}
         </p>
       </div>
-      
+
       <div className="flex bg-muted rounded-full p-1 w-full sm:w-auto">
         <Button
           variant={theme === "light" ? "default" : "ghost"}
@@ -26,7 +27,7 @@ export function ThemeToggle() {
           className="flex-1 sm:flex-none rounded-full h-8"
         >
           <Sun className="h-4 w-4 mr-2" />
-          Light
+          {t("settings.light")}
         </Button>
         <Button
           variant={theme === "dark" ? "default" : "ghost"}
@@ -35,7 +36,7 @@ export function ThemeToggle() {
           className="flex-1 sm:flex-none rounded-full h-8"
         >
           <Moon className="h-4 w-4 mr-2" />
-          Dark
+          {t("settings.dark")}
         </Button>
         <Button
           variant={theme === "system" ? "default" : "ghost"}
@@ -43,9 +44,9 @@ export function ThemeToggle() {
           onClick={() => setTheme("system")}
           className="flex-1 sm:flex-none rounded-full h-8"
         >
-          System
+          {t("settings.system")}
         </Button>
       </div>
     </div>
-  )
+  );
 }

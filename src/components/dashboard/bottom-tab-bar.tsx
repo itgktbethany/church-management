@@ -8,7 +8,6 @@ import {
   BookOpen,
   LayoutDashboard,
   Settings,
-  UserCircle2,
   Users,
   MoreHorizontal,
   AlarmClock,
@@ -27,42 +26,41 @@ import {
 } from "@/components/ui/sheet";
 
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/language-provider";
 import { LogoutButton } from "./logout-button";
-
-const mainTabs = [
-  { title: "Home", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Devotionals", href: "/dashboard/devotionals", icon: BookOpen },
-  { title: "Groups", href: "/dashboard/group", icon: Users },
-  { title: "My Points", href: "/dashboard/points", icon: Coins },
-];
-
-const moreItems = [
-  { title: "Settings", href: "/dashboard/settings", icon: Settings },
-];
-
-const adminItems = [
-  { title: "Devotional Mgmt", href: "/dashboard/admin/devotionals", icon: Shield },
-  { title: "Alert Mgmt", href: "/dashboard/admin/alerts", icon: AlarmClock },
-  { title: "Group Mgmt", href: "/dashboard/admin/groups", icon: Users },
-  { title: "Ministries", href: "/dashboard/admin/ministries", icon: BookOpen },
-  { title: "Events", href: "/dashboard/admin/events", icon: Ticket },
-  { title: "Points Mgmt", href: "/dashboard/admin/points", icon: Coins },
-];
 
 type BottomTabBarProps = { role: string };
 
 export function BottomTabBar({ role }: BottomTabBarProps) {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const { t } = useLanguage();
+
+  const mainTabs = [
+    { title: t("common.home"), href: "/dashboard", icon: LayoutDashboard },
+    { title: t("common.devotionals"), href: "/dashboard/devotionals", icon: BookOpen },
+    { title: t("common.groups"), href: "/dashboard/group", icon: Users },
+    { title: t("common.myPoints"), href: "/dashboard/points", icon: Coins },
+  ];
+
+  const moreItems = [
+    { title: t("common.settings"), href: "/dashboard/settings", icon: Settings },
+  ];
+
+  const adminItems = [
+    { title: t("common.devotionalMgmtShort"), href: "/dashboard/admin/devotionals", icon: Shield },
+    { title: t("common.alertMgmtShort"), href: "/dashboard/admin/alerts", icon: AlarmClock },
+    { title: t("common.groupMgmtShort"), href: "/dashboard/admin/groups", icon: Users },
+    { title: t("common.ministries"), href: "/dashboard/admin/ministries", icon: BookOpen },
+    { title: t("common.events"), href: "/dashboard/admin/events", icon: Ticket },
+    { title: t("common.pointsMgmtShort"), href: "/dashboard/admin/points", icon: Coins },
+  ];
 
   const isMoreActive =
     pathname.startsWith("/dashboard/settings") ||
-    pathname.startsWith("/dashboard/points") ||
     pathname.startsWith("/dashboard/admin");
 
   return (
-    // The nav itself sits flush at the bottom; padding-bottom handles the iPhone
-    // home indicator area (safe area inset). The tab row is always 64px tall.
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur-md md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
@@ -114,7 +112,7 @@ export function BottomTabBar({ role }: BottomTabBarProps) {
               >
                 <MoreHorizontal className="h-5 w-5" />
               </div>
-              <span>More</span>
+              <span>{t("common.more")}</span>
             </button>
           </SheetTrigger>
 
@@ -122,7 +120,7 @@ export function BottomTabBar({ role }: BottomTabBarProps) {
             <SheetHeader className="mb-4">
               <SheetTitle className="flex items-center gap-2 text-left">
                 <Cross className="h-4 w-4 text-primary" />
-                More
+                {t("common.more")}
               </SheetTitle>
             </SheetHeader>
 
@@ -149,7 +147,7 @@ export function BottomTabBar({ role }: BottomTabBarProps) {
               {role === "admin" && (
                 <>
                   <p className="mt-4 px-4 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Admin
+                    {t("common.admin")}
                   </p>
                   {adminItems.map((item) => {
                     const Icon = item.icon;

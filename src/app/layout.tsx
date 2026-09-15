@@ -39,6 +39,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { LanguageProvider } from "@/components/language-provider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -73,17 +75,19 @@ export default function RootLayout({
         {/* Registers firebase-messaging-sw.js on all platforms, required for iOS */}
         <FirebaseServiceWorkerRegistrar />
         <FirebaseForegroundHandler />
-        <FontSizeProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster richColors/>
-          </ThemeProvider>
-        </FontSizeProvider>
+        <LanguageProvider>
+          <FontSizeProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Toaster richColors/>
+            </ThemeProvider>
+          </FontSizeProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

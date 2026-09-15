@@ -5,9 +5,11 @@ import { LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
+import { useLanguage } from "@/components/language-provider";
 
 export function LogoutButton() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   async function handleLogout() {
     await authClient.signOut();
@@ -23,7 +25,7 @@ export function LogoutButton() {
       className="w-full justify-start gap-3"
     >
       <LogOut className="h-4 w-4" />
-      Logout
+      {t("common.logout")}
     </Button>
   );
 }

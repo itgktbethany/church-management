@@ -15,80 +15,82 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/language-provider";
 import { LogoutButton } from "./logout-button";
 
 type SidebarProps = {
   role: string;
 };
 
-const menuItems = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Devotionals",
-    href: "/dashboard/devotionals",
-    icon: BookOpen,
-  },
-  {
-    title: "Groups",
-    href: "/dashboard/group",
-    icon: Users,
-  },
-  {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: User,
-  },
-  {
-    title: "My Points",
-    href: "/dashboard/points",
-    icon: Coins,
-  },
-  {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-  },
-];
-
-const adminMenuItems = [
-  {
-    title: "Devotional Management",
-    href: "/dashboard/admin/devotionals",
-    icon: Shield,
-  },
-  {
-    title: "Alert Management",
-    href: "/dashboard/admin/alerts",
-    icon: AlarmClock,
-  },
-  {
-    title: "Group Management",
-    href: "/dashboard/admin/groups",
-    icon: Users,
-  },
-  {
-    title: "Ministries Management",
-    href: "/dashboard/admin/ministries",
-    icon: BookOpen,
-  },
-  {
-    title: "Event Management",
-    href: "/dashboard/admin/events",
-    icon: Ticket,
-  },
-  {
-    title: "Points Management",
-    href: "/dashboard/admin/points",
-    icon: Coins,
-  },
-];
-
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const menuItems = [
+    {
+      title: t("common.dashboard"),
+      href: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      title: t("common.devotionals"),
+      href: "/dashboard/devotionals",
+      icon: BookOpen,
+    },
+    {
+      title: t("common.groups"),
+      href: "/dashboard/group",
+      icon: Users,
+    },
+    {
+      title: t("common.profile"),
+      href: "/dashboard/profile",
+      icon: User,
+    },
+    {
+      title: t("common.myPoints"),
+      href: "/dashboard/points",
+      icon: Coins,
+    },
+    {
+      title: t("common.settings"),
+      href: "/dashboard/settings",
+      icon: Settings,
+    },
+  ];
+
+  const adminMenuItems = [
+    {
+      title: t("common.devotionalMgmt"),
+      href: "/dashboard/admin/devotionals",
+      icon: Shield,
+    },
+    {
+      title: t("common.alertMgmt"),
+      href: "/dashboard/admin/alerts",
+      icon: AlarmClock,
+    },
+    {
+      title: t("common.groupMgmt"),
+      href: "/dashboard/admin/groups",
+      icon: Users,
+    },
+    {
+      title: t("common.ministriesMgmt"),
+      href: "/dashboard/admin/ministries",
+      icon: BookOpen,
+    },
+    {
+      title: t("common.eventMgmt"),
+      href: "/dashboard/admin/events",
+      icon: Ticket,
+    },
+    {
+      title: t("common.pointsMgmt"),
+      href: "/dashboard/admin/points",
+      icon: Coins,
+    },
+  ];
 
   return (
     <aside className="hidden h-screen w-64 border-r bg-background md:flex md:flex-col">
@@ -96,7 +98,7 @@ export function Sidebar({ role }: SidebarProps) {
         <h1 className="text-xl font-bold">FaithFlow</h1>
 
         <p className="text-sm text-muted-foreground">
-          Church Management
+          {t("common.churchManagement")}
         </p>
       </div>
 
@@ -123,7 +125,7 @@ export function Sidebar({ role }: SidebarProps) {
         {role === "admin" && (
           <>
             <div className="mt-4 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Admin
+              {t("common.admin")}
             </div>
 
             {adminMenuItems.map((item) => {

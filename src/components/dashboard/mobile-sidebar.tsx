@@ -26,74 +26,9 @@ import {
 } from "@/components/ui/sheet";
 
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/language-provider";
 import { LogoutButton } from "./logout-button";
 import { cn } from "@/lib/utils";
-
-const menuItems = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Devotionals",
-    href: "/dashboard/devotionals",
-    icon: BookOpen,
-  },
-  {
-    title: "Groups",
-    href: "/dashboard/group",
-    icon: Users,
-  },
-  {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: UserCircle2,
-  },
-  {
-    title: "My Points",
-    href: "/dashboard/points",
-    icon: Coins,
-  },
-  {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-  },
-];
-
-const adminMenuItems = [
-  {
-    title: "Devotional Management",
-    href: "/dashboard/admin/devotionals",
-    icon: Shield,
-  },
-  {
-    title: "Alert Management",
-    href: "/dashboard/admin/alerts",
-    icon: AlarmClock,
-  },
-  {
-    title: "Group Management",
-    href: "/dashboard/admin/groups",
-    icon: Users,
-  },
-  {
-    title: "Ministries Management",
-    href: "/dashboard/admin/ministries",
-    icon: BookOpen,
-  },
-  {
-    title: "Event Management",
-    href: "/dashboard/admin/events",
-    icon: Ticket,
-  },
-  {
-    title: "Points Management",
-    href: "/dashboard/admin/points",
-    icon: Coins,
-  },
-];
 
 type MobileSidebarProps = {
   role: string;
@@ -101,6 +36,73 @@ type MobileSidebarProps = {
 
 export function MobileSidebar({ role }: MobileSidebarProps) {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const menuItems = [
+    {
+      title: t("common.dashboard"),
+      href: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      title: t("common.devotionals"),
+      href: "/dashboard/devotionals",
+      icon: BookOpen,
+    },
+    {
+      title: t("common.groups"),
+      href: "/dashboard/group",
+      icon: Users,
+    },
+    {
+      title: t("common.profile"),
+      href: "/dashboard/profile",
+      icon: UserCircle2,
+    },
+    {
+      title: t("common.myPoints"),
+      href: "/dashboard/points",
+      icon: Coins,
+    },
+    {
+      title: t("common.settings"),
+      href: "/dashboard/settings",
+      icon: Settings,
+    },
+  ];
+
+  const adminMenuItems = [
+    {
+      title: t("common.devotionalMgmt"),
+      href: "/dashboard/admin/devotionals",
+      icon: Shield,
+    },
+    {
+      title: t("common.alertMgmt"),
+      href: "/dashboard/admin/alerts",
+      icon: AlarmClock,
+    },
+    {
+      title: t("common.groupMgmt"),
+      href: "/dashboard/admin/groups",
+      icon: Users,
+    },
+    {
+      title: t("common.ministriesMgmt"),
+      href: "/dashboard/admin/ministries",
+      icon: BookOpen,
+    },
+    {
+      title: t("common.eventMgmt"),
+      href: "/dashboard/admin/events",
+      icon: Ticket,
+    },
+    {
+      title: t("common.pointsMgmt"),
+      href: "/dashboard/admin/points",
+      icon: Coins,
+    },
+  ];
 
   return (
     <Sheet>
@@ -119,10 +121,8 @@ export function MobileSidebar({ role }: MobileSidebarProps) {
         className="w-[280px] border-r bg-background p-0"
       >
         <div className="flex h-full flex-col">
-          
           <SheetHeader className="border-b px-6 py-5">
             <div className="flex items-center gap-3">
-
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
                 <Cross className="h-5 w-5" />
               </div>
@@ -133,7 +133,7 @@ export function MobileSidebar({ role }: MobileSidebarProps) {
                 </SheetTitle>
 
                 <p className="text-sm text-muted-foreground">
-                  Church Management
+                  {t("common.churchManagement")}
                 </p>
               </div>
             </div>
@@ -142,9 +142,7 @@ export function MobileSidebar({ role }: MobileSidebarProps) {
           <nav className="flex-1 space-y-2 px-4 py-6">
             {menuItems.map((item) => {
               const Icon = item.icon;
-
-              const isActive =
-                pathname === item.href;
+              const isActive = pathname === item.href;
 
               return (
                 <Link
@@ -166,7 +164,7 @@ export function MobileSidebar({ role }: MobileSidebarProps) {
             {role === "admin" && (
               <>
                 <div className="mt-4 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Admin
+                  {t("common.admin")}
                 </div>
 
                 {adminMenuItems.map((item) => {
@@ -194,27 +192,7 @@ export function MobileSidebar({ role }: MobileSidebarProps) {
           </nav>
 
           <div className="border-t p-4 space-y-4">
-
-            <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-3">
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                N
-              </div>
-
-              <div className="flex flex-col">
-                <p className="text-sm font-medium">
-                  Nicholas
-                </p>
-
-                <p className="text-xs text-muted-foreground">
-                  member@faithflow.com
-                </p>
-              </div>
-
-            </div>
-
             <LogoutButton />
-
           </div>
         </div>
       </SheetContent>

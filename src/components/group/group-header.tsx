@@ -1,5 +1,8 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Users } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 interface GroupHeaderProps {
   group: {
@@ -13,6 +16,8 @@ interface GroupHeaderProps {
 }
 
 export function GroupHeader({ group, leader, totalMembers }: GroupHeaderProps) {
+  const { t } = useLanguage();
+
   return (
     <Card className="mb-6 border-none shadow-sm bg-primary/5">
       <CardHeader>
@@ -29,11 +34,11 @@ export function GroupHeader({ group, leader, totalMembers }: GroupHeaderProps) {
       <CardContent>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm">
           <div>
-            <span className="text-muted-foreground block mb-1">Leader</span>
+            <span className="text-muted-foreground block mb-1">{t("groups.leader")}</span>
             <span className="font-medium">{leader?.name || "No Leader Assigned"}</span>
           </div>
           <div>
-            <span className="text-muted-foreground block mb-1">Members</span>
+            <span className="text-muted-foreground block mb-1">{t("groups.members")}</span>
             <span className="font-medium">{totalMembers}</span>
           </div>
         </div>

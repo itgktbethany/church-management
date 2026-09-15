@@ -40,7 +40,7 @@ export function DevotionalNoteCard({
           </div>
         </div>
 
-        <p className="leading-7 text-muted-foreground">
+        <p className="leading-7 text-muted-foreground whitespace-pre-wrap">
           {reflection.comment}
         </p>
       </CardContent>

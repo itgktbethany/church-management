@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { requestNotificationPermission } from "@/lib/firebase/request-permission";
 import { sendWelcomeNotification } from "@/actions/send-welcome-notification";
+import { useLanguage } from "@/components/language-provider";
 import { toast } from "sonner";
 import { BellRing } from "lucide-react";
 
 export function NotificationSettings() {
+  const { t } = useLanguage();
   const [loadingEnable, setLoadingEnable] = useState(false);
   const [enabled, setEnabled] = useState(false);
 
-  // Initialise from the real browser permission on mount so the button
-  // does not reset to "Enable" every time the settings page is opened.
   useEffect(() => {
     if (typeof window !== "undefined" && "Notification" in window) {
       setEnabled(Notification.permission === "granted");
@@ -27,19 +27,12 @@ export function NotificationSettings() {
         return;
       }
 
-      // iOS Safari CRITICAL: Notification.requestPermission() MUST be called
-      // as the very first await in a direct user gesture handler. Any prior
-      // async operation (including await messagingPromise) breaks iOS's gesture
-      // chain — the permission prompt will never appear or will be silently
-      // denied. This is the #1 reason push notifications fail on iOS PWAs.
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
         toast.error("Permission denied. Please allow notifications in Safari settings.");
         return;
       }
 
-      // Permission is already granted — requestNotificationPermission will skip
-      // the requestPermission call and proceed directly to getToken.
       const token = await requestNotificationPermission();
       if (token) {
         await sendWelcomeNotification(token);
@@ -60,9 +53,9 @@ export function NotificationSettings() {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="space-y-1">
-          <p className="font-medium">Push Notifications</p>
+          <p className="font-medium">{t("settings.notifications")}</p>
           <p className="text-sm text-muted-foreground">
-            Receive updates about daily devotionals and your groups.
+            {t("settings.notificationsSub")}
           </p>
         </div>
 
@@ -72,7 +65,7 @@ export function NotificationSettings() {
           className="w-full sm:w-auto"
         >
           <BellRing className="w-4 h-4 mr-2" />
-          {loadingEnable ? "Enabling..." : enabled ? "Enabled" : "Enable"}
+          {loadingEnable ? t("settings.checking") : enabled ? t("settings.notificationsEnabled") : t("settings.enableNotifications")}
         </Button>
       </div>
     </div>
