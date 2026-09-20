@@ -5,20 +5,22 @@ import { toast } from "sonner";
 import { markRedemptionUsed } from "@/actions/points";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/language-provider";
 
 export function UnusedRedemptionsList({ redemptions }: { redemptions: any[] }) {
   const [isPending, startTransition] = useTransition();
+  const { t } = useLanguage();
 
   function handleMarkUsed(transactionId: string) {
-    const confirmed = window.confirm("Admin only: Mark this reward as used?");
+    const confirmed = window.confirm(t("points.confirmMarkUsed"));
     if (!confirmed) return;
 
     startTransition(async () => {
       try {
         await markRedemptionUsed(transactionId);
-        toast.success("Reward marked as used");
+        toast.success(t("points.markedUsedSuccess"));
       } catch (error) {
-        toast.error("Failed to update status");
+        toast.error(t("points.updateStatusFailed"));
       }
     });
   }
@@ -30,7 +32,7 @@ export function UnusedRedemptionsList({ redemptions }: { redemptions: any[] }) {
           <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
             <h3 className="font-bold text-xl">{tx.event?.name}</h3>
             <p className="text-sm text-muted-foreground">
-              Redeemed on {new Date(tx.createdAt).toLocaleDateString()}
+              {t("points.redeemedOn")} {new Date(tx.createdAt).toLocaleDateString()}
             </p>
             <Button 
               size="lg" 
@@ -38,7 +40,7 @@ export function UnusedRedemptionsList({ redemptions }: { redemptions: any[] }) {
               disabled={isPending}
               className="w-full mt-4"
             >
-              {isPending ? "Updating..." : "Mark as Used (Admin)"}
+              {isPending ? t("points.updating") : t("points.markAsUsed")}
             </Button>
           </CardContent>
         </Card>

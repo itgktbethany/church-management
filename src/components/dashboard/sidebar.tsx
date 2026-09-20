@@ -95,7 +95,7 @@ export function Sidebar({ role }: SidebarProps) {
   return (
     <aside className="hidden h-screen w-64 border-r bg-background md:flex md:flex-col">
       <div className="border-b p-6">
-        <h1 className="text-xl font-bold">FaithFlow</h1>
+        <h1 className="text-xl font-bold">myMSH</h1>
 
         <p className="text-sm text-muted-foreground">
           {t("common.churchManagement")}
@@ -113,7 +113,7 @@ export function Sidebar({ role }: SidebarProps) {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted",
                 pathname === item.href &&
-                  "bg-muted font-medium"
+                "bg-muted font-medium"
               )}
             >
               <Icon className="h-4 w-4" />
@@ -138,7 +138,7 @@ export function Sidebar({ role }: SidebarProps) {
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted",
                     pathname === item.href &&
-                      "bg-muted font-medium"
+                    "bg-muted font-medium"
                   )}
                 >
                   <Icon className="h-4 w-4" />

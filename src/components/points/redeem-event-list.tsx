@@ -5,26 +5,28 @@ import { toast } from "sonner";
 import { redeemPoints } from "@/actions/points";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/language-provider";
 
 export function RedeemEventList({ events, userPoints }: { events: any[]; userPoints: number }) {
   const [isPending, startTransition] = useTransition();
+  const { t } = useLanguage();
 
   function handleRedeem(eventId: string) {
-    const confirmed = window.confirm("Are you sure you want to redeem this reward?");
+    const confirmed = window.confirm(t("points.confirmRedeem"));
     if (!confirmed) return;
 
     startTransition(async () => {
       try {
         await redeemPoints(eventId);
-        toast.success("Successfully redeemed! Check your unused rewards.");
+        toast.success(t("points.redeemSuccess"));
       } catch (error: any) {
-        toast.error(error.message || "Failed to redeem points");
+        toast.error(error.message || t("points.redeemFailed"));
       }
     });
   }
 
   if (events.length === 0) {
-    return <p className="text-muted-foreground">No rewards available at the moment.</p>;
+    return <p className="text-muted-foreground">{t("points.noRewards")}</p>;
   }
 
   return (
@@ -46,7 +48,7 @@ export function RedeemEventList({ events, userPoints }: { events: any[]; userPoi
                 disabled={!canAfford || isPending}
                 className="w-full"
               >
-                {canAfford ? "Redeem" : "Not enough points"}
+                {canAfford ? t("points.redeem") : t("points.notEnoughPoints")}
               </Button>
             </CardFooter>
           </Card>

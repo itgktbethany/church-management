@@ -60,14 +60,14 @@ export function PointsContent({ totalPoints, history }: PointsContentProps) {
                 const content = (
                   <div className={`flex items-center justify-between border-b pb-4 last:border-0 last:pb-0 ${isUnused ? "hover:bg-muted/50 p-2 -mx-2 rounded-md transition-colors" : ""}`}>
                     <div>
-                      <p className="font-medium">{tx.event?.name || "Manual Adjustment"}</p>
+                      <p className="font-medium">{tx.event?.name || t("points.manualAdjustment")}</p>
                       <p className="text-xs text-muted-foreground">
                         {new Date(tx.createdAt).toLocaleString()}
                       </p>
                       {tx.type === "deduct" && tx.redemptionStatus && (
                         <div className="mt-1">
                           <Badge variant={tx.redemptionStatus === "used" ? "secondary" : "default"}>
-                            {tx.redemptionStatus === "used" ? "Redeemed & Used" : "Unused Reward (Click to Claim)"}
+                            {tx.redemptionStatus === "used" ? t("points.redeemedAndUsed") : t("points.unusedRewardClickToClaim")}
                           </Badge>
                         </div>
                       )}
