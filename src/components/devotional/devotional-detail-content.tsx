@@ -13,7 +13,7 @@ interface DevotionalDetailContentProps {
   devotionalData: {
     id: string;
     title: string;
-    bibleReading: string;
+    bibleReading: string | null;
     verse: string;
     content: string | null;
   };
