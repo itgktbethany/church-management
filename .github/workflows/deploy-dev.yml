@@ -1,0 +1,44 @@
+name: Deploy FaithFlow
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+
+            cd /var/www/church-management
+
+            echo "Updating source code..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "Installing dependencies..."
+            npm ci
+
+            echo "Building Next.js..."
+            npm run build
+
+            echo "Restarting application..."
+            sudo systemctl restart church-management
+
+            echo "Waiting for application..."
+            sleep 5
+
+            echo "Health check..."
+            curl -f http://127.0.0.1:3000
+
+            echo "Deployment successful!"
