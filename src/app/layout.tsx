@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { FontSizeProvider } from "@/components/font-size-provider";
 import { FirebaseServiceWorkerRegistrar } from "@/components/firebase-service-worker-registrar";
 import { FirebaseForegroundHandler } from "@/components/firebase-foreground-handler";
-import Script from "next/script";
 
 export const viewport: Viewport = {
   // Required for env(safe-area-inset-*) to work on iPhone
@@ -54,9 +53,9 @@ export default function RootLayout({
     >
       <head>
         {/* Runs before hydration to prevent font-size flash */}
-        <Script
+        <script
           id="font-size-init"
-          strategy="beforeInteractive"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               try {
