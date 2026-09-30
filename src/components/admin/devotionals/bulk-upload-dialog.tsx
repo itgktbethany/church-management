@@ -77,18 +77,48 @@ async function handleSubmit() {
 }
 
 
-function validateRows(
-  rows: DevotionalRow[]
-) {
-  return rows.map((row) => ({
-    ...row,
+function formatExcelDate(publishDate: any): string {
+  if (!publishDate) return "";
+  
+  if (typeof publishDate === "number") {
+    // Excel date serial number
+    const utc_days = Math.floor(publishDate - 25569);
+    const utc_value = utc_days * 86400;
+    const date_info = new Date(utc_value * 1000);
+    const year = date_info.getFullYear();
+    const month = String(date_info.getMonth() + 1).padStart(2, '0');
+    const day = String(date_info.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
+  if (publishDate instanceof Date) {
+    const year = publishDate.getFullYear();
+    const month = String(publishDate.getMonth() + 1).padStart(2, '0');
+    const day = String(publishDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
+  return String(publishDate);
+}
 
-    valid:
-      !!row.title &&
-      !!row.verse &&
-      !!row.content &&
-      !!row.publishDate,
-  }));
+function validateRows(
+  rows: any[]
+): DevotionalRow[] {
+  return rows.map((row) => {
+    const formattedDate = formatExcelDate(row.publishDate);
+    return {
+      title: row.title || "",
+      verse: row.verse || "",
+      bible_reading: row.bible_reading || "",
+      content: row.content || "",
+      publishDate: formattedDate,
+      valid:
+        !!row.title &&
+        !!row.verse &&
+        !!row.content &&
+        !!formattedDate,
+    };
+  });
 }
 
   const [data, setData] = useState<
@@ -127,7 +157,7 @@ function validateRows(
           sheet
         );
 
-      const validatedData = validateRows(json as DevotionalRow[]);
+      const validatedData = validateRows(json);
 
       setData(validatedData);
     };
@@ -149,7 +179,7 @@ function validateRows(
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="sm:max-w-5xl max-w-[90vw]">
 
         <DialogHeader>
 
@@ -210,21 +240,23 @@ function validateRows(
 
           </div>
 
-          {data.map(
-            (
-              item,
-              index
-            ) => (
-              <div key={index} className={`rounded-lg border p-3 ${item.valid ? "" : "border-red-500"}`}>
-                <div>
-                    <p>{item.title}</p>
-                    <p className="text-sm text-muted-foreground">{item.verse}</p>
+          <div className="max-h-[50vh] overflow-y-auto space-y-2 pr-2">
+            {data.map(
+              (
+                item,
+                index
+              ) => (
+                <div key={index} className={`rounded-lg border p-3 ${item.valid ? "" : "border-red-500"}`}>
+                  <div>
+                      <p>{item.title}</p>
+                      <p className="text-sm text-muted-foreground">{item.verse}</p>
+                  </div>
+                  <Badge variant ={item.valid? "default":"destructive"}>{item.valid ? "Valid" : "Invalid"}</Badge>
                 </div>
-                <Badge variant ={item.valid? "default":"destructive"}>{item.valid ? "Valid" : "Invalid"}</Badge>
-              </div>
-            )
-          )}
-            <Button className="w-full" onClick={handleSubmit}
+              )
+            )}
+          </div>
+            <Button className="w-full mt-4" onClick={handleSubmit}
               disabled={
                         isUploading ||
                         data.length === 0 ||
