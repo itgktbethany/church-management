@@ -95,7 +95,7 @@ export function Sidebar({ role }: SidebarProps) {
   return (
     <aside className="hidden h-screen w-64 border-r bg-background md:flex md:flex-col">
       <div className="border-b p-6">
-        <h1 className="text-xl font-bold">myMSH</h1>
+        <h1 className="text-xl font-bold">myMSK</h1>
 
         <p className="text-sm text-muted-foreground">
           {t("common.churchManagement")}

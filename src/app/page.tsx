@@ -13,7 +13,7 @@ export default async function HomePage() {
       <div className="mx-auto max-w-2xl space-y-6 text-center">
         <div className="space-y-3">
           <h1 className="text-5xl font-bold tracking-tight">
-            Church Management System
+            Welcome to myMSK
           </h1>
 
           <p className="text-lg text-muted-foreground">

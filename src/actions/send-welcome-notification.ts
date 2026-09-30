@@ -3,7 +3,7 @@
 import { adminMessaging } from "@/lib/firebase/admin";
 
 /**
- * Sends a "Welcome to FaithFlow" notification to a single FCM token.
+ * Sends a "Welcome to myMSK" notification to a single FCM token.
  * Called immediately after a user grants notification permission, so only
  * they receive it (not a broadcast to all users).
  */
@@ -17,7 +17,7 @@ export async function sendWelcomeNotification(token: string) {
       // The SW (firebase-messaging-sw.js) handles display for all platforms.
       webpush: {
         notification: {
-          title: "Welcome to FaithFlow 🎉",
+          title: "Welcome to myMSK 🎉",
           body: "You're all set! You'll now receive updates about devotionals and your groups.",
           // Use the same icon as sendPushToAll — iOS silently drops pushes
           // when the icon path is invalid or the image is too small.

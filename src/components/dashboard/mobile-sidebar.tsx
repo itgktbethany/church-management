@@ -129,7 +129,7 @@ export function MobileSidebar({ role }: MobileSidebarProps) {
 
               <div className="flex flex-col text-left">
                 <SheetTitle className="text-lg font-semibold">
-                  FaithFlow
+                  myMSK
                 </SheetTitle>
 
                 <p className="text-sm text-muted-foreground">

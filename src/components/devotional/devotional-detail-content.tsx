@@ -65,20 +65,26 @@ export function DevotionalDetailContent({
           <div className="flex items-start gap-4">
             <BookOpen className="mt-1 h-5 w-5 text-muted-foreground" />
 
-            <div className="space-y-3">
-              <div>
+            <div className="space-y-6 w-full">
+              {/* Item 1: Today's Bible Verse */}
+              <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  {t("devotionals.bibleReading")}
+                  {t("devotionals.todayBibleVerse")}
                 </p>
-
-                <h2 className="mt-1 text-xl font-semibold">
-                  {devotionalData.bibleReading}
+                <h2 className="text-lg font-semibold leading-relaxed text-foreground">
+                  {devotionalData.verse}
                 </h2>
               </div>
 
-              <p className="leading-8 text-muted-foreground">
-                {devotionalData.verse}
-              </p>
+              {/* Item 2: Daily Bible Verse */}
+              <div className="space-y-2 pt-4 border-t border-border/50">
+                <p className="text-sm text-muted-foreground">
+                  {t("devotionals.dailyBibleVerse")}
+                </p>
+                <h2 className="text-lg font-semibold text-foreground">
+                  {devotionalData.bibleReading}
+                </h2>
+              </div>
             </div>
           </div>
         </CardContent>
