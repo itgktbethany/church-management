@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { user, account } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { hashPassword } from "better-auth/crypto";
 
 export async function resetPasswordDirect(email: string, newPassword: string) {
@@ -17,9 +17,23 @@ export async function resetPasswordDirect(email: string, newPassword: string) {
 
     const hashedPassword = await hashPassword(newPassword);
 
-    await db.update(account)
+    // Only update the credential (email/password) account row.
+    // A user can have multiple account rows (e.g. credential + google).
+    // better-auth reads the password from the row where providerId = "credential",
+    // so scoping the update here ensures signIn.email picks up the new hash.
+    const updated = await db.update(account)
       .set({ password: hashedPassword })
-      .where(eq(account.userId, existingUser.id));
+      .where(
+        and(
+          eq(account.userId, existingUser.id),
+          eq(account.providerId, "credential"),
+        )
+      )
+      .returning({ id: account.id });
+
+    if (updated.length === 0) {
+      return { success: false, message: "Akun email/password tidak ditemukan. Mungkin akun ini hanya menggunakan Google." };
+    }
 
     return { success: true };
   } catch (error) {
