@@ -5,7 +5,7 @@ import { DevotionalsHeader } from "@/components/devotional/devotionals-header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { db } from "@/lib/db";
-import { devotionalComments, devotionals } from "@/lib/db/schema";
+import { devotionalComments, devotionals, devotionalCompletions } from "@/lib/db/schema";
 import { user } from "@/lib/db/auth-schema";
 import { desc, eq } from "drizzle-orm";
 
@@ -24,9 +24,23 @@ export default async function DevotionalPage(props: { searchParams: Promise<{ ta
     : null;
   const totalPoints = currentUser?.points ?? 0;
 
-  const devotionalData = await db.select()
-    .from(devotionals)
-    .orderBy(desc(devotionals.publishDate));
+  const devotionalData = user_data
+    ? await db
+        .select({
+          id: devotionals.id,
+          title: devotionals.title,
+          verse: devotionals.verse,
+          content: devotionals.content,
+          publishDate: devotionals.publishDate,
+        })
+        .from(devotionals)
+        .innerJoin(
+          devotionalCompletions,
+          eq(devotionals.id, devotionalCompletions.devotionalId)
+        )
+        .where(eq(devotionalCompletions.userId, user_data.id))
+        .orderBy(desc(devotionalCompletions.completedAt))
+    : [];
 
   const reflectionsData = user_data
     ? await db
