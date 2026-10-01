@@ -1,1 +1,0 @@
-ALTER TABLE "alerts" ADD COLUMN "next_fire_at" timestamp;
