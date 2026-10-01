@@ -37,7 +37,15 @@ export const alerts = pgTable("alerts", {
   /** Cron expression used when scheduleType = "recurring" (e.g. "0 9 * * 0") */
   cronExpression: text("cron_expression"),
 
+  /** Set once when a one_time alert is sent; permanently excludes it from future runs */
   publishedAt: timestamp("published_at"),
+
+  /**
+   * For recurring alerts: the next scheduled fire time (computed from cronExpression).
+   * NULL means "not yet scheduled" — the first fire is triggered by displayAt.
+   * After each fire this is updated to the next interval.
+   */
+  nextFireAt: timestamp("next_fire_at"),
 
   createdAt: timestamp("created_at")
     .defaultNow()
