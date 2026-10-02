@@ -11,4 +11,4 @@ jobs:
       - name: Trigger process-alerts
         run: |
           curl -X POST -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-          https://your-production-domain.com/api/internal/process-alerts
+          https://mymsk.gktbethany.or.id/api/internal/process-alerts
