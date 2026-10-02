@@ -1,7 +1,8 @@
 import { adminMessaging } from "@/lib/firebase/admin";
 import { db } from "@/lib/db";
 import { alerts, pushTokens, user } from "@/lib/db/schema";
-import { and, eq, isNotNull, isNull, lte } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, lte, or } from "drizzle-orm";
+import { CronExpressionParser } from "cron-parser";
 
 export async function sendPushToAll(
   title: string,
@@ -81,7 +82,9 @@ export async function sendAlertNotification(alert: {
 }
 
 export async function processPendingAlerts() {
-    let processed = 0
+  let processed = 0;
+  
+  // 1. Fetch pending alerts
   const pendingAlerts = await db
     .select()
     .from(alerts)
@@ -89,9 +92,13 @@ export async function processPendingAlerts() {
       and(
         eq(alerts.isActive, true),
         eq(alerts.sendPush, true),
-        isNull(alerts.publishedAt),
-        lte(alerts.displayAt, new Date()),
-        isNotNull(alerts.displayAt)
+        lte(alerts.displayAt, new Date()), // Time to display has arrived
+        isNotNull(alerts.displayAt),
+        // Process if it's never been published OR if it's recurring
+        or(
+          isNull(alerts.publishedAt),
+          eq(alerts.scheduleType, "recurring")
+        )
       )
     );
 
@@ -103,13 +110,32 @@ export async function processPendingAlerts() {
   }
 
   for (const alert of pendingAlerts) {
+    let nextDisplayAt = alert.displayAt;
+
+    // 2. If recurring, calculate the next display time based on cronExpression
+    if (alert.scheduleType === "recurring" && alert.cronExpression) {
+      try {
+        const interval = CronExpressionParser.parse(alert.cronExpression);
+        nextDisplayAt = interval.next().toDate();
+      } catch (err) {
+        console.error(`Invalid cron expression for alert ${alert.id}`, err);
+        continue; // Skip processing if cron is invalid
+      }
+    }
+
+    // 3. Update the alert in the database
     const [updated] = await db
       .update(alerts)
-      .set({ publishedAt: new Date() })
+      .set({ 
+        publishedAt: new Date(),
+        // Update displayAt to the next schedule for recurring, otherwise keep current
+        displayAt: alert.scheduleType === "recurring" ? nextDisplayAt : alert.displayAt
+      })
       .where(
         and(
           eq(alerts.id, alert.id),
-          isNull(alerts.publishedAt)
+          // Concurrency control: Ensure nobody else processed it at the same exact time
+          eq(alerts.displayAt, alert.displayAt!) 
         )
       )
       .returning();
@@ -118,6 +144,7 @@ export async function processPendingAlerts() {
       continue; // Another process already claimed this alert
     }
 
+    // 4. Send the push notification
     await sendAlertNotification({
       title: alert.title,
       message: alert.message,

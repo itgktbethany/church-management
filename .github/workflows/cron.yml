@@ -1,0 +1,14 @@
+name: Process Alerts Cron
+
+on:
+  schedule:
+    - cron: '* * * * *' # Runs every minute
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger process-alerts
+        run: |
+          curl -X POST -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+          https://your-production-domain.com/api/internal/process-alerts
