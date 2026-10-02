@@ -1,12 +1,15 @@
 name: Process Alerts Cron
 
 on:
+  workflow_dispatch: # Memungkinkan trigger manual dari GitHub UI
   schedule:
     - cron: '* * * * *' # Runs every minute
 
 jobs:
   cron:
     runs-on: ubuntu-latest
+    environment: mymsk-production
+
     steps:
       - name: Trigger process-alerts
         run: |
